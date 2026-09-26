@@ -15,7 +15,10 @@ dependencies:
   app_links:
   printing: ^5.11.1
   hive_flutter: ^1.1.0
-  material_color_utilities: ^0.13.0
+  # Not imported anywhere in lib/ — declared but unused. Pinned to the range
+  # flutter_test pulls in so the dependency graph still resolves; the SDK's
+  # flutter_test pins 0.11.1 and a ^0.13.0 constraint makes `pub get` fail.
+  material_color_utilities: ^0.11.1
   dynamic_color: ^1.8.1
   zoom_tap_animation:
   loading_animation_widget:
