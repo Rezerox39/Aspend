@@ -4,61 +4,62 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
 
 permissions:
   contents: write
 
 jobs:
   build:
-    name: Build and Release APKs
+    name: Build release APK
     runs-on: ubuntu-latest
 
     steps:
-      # ============================================
-      # CHECKOUT REPOSITORY
-      # ============================================
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # ============================================
-      # SETUP JAVA
-      # ============================================
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # ============================================
-      # SETUP FLUTTER
-      # ============================================
+      # pubspec.lock declares flutter >=3.44.0; the previous 3.32.4 pin could
+      # not resolve the current dependency set.
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.32.4
+          flutter-version: 3.44.9
+          channel: stable
           cache: true
 
-      # ============================================
-      # VERIFY FLUTTER
-      # ============================================
-      - name: Flutter Doctor
-        run: flutter doctor -v
+      - name: Install dependencies
+        run: flutter pub get
 
-      # ============================================
-      # RESTORE KEYSTORE
-      # ============================================
+      # The committed generated localizations go stale whenever an .arb
+      # changes. Regenerating here guarantees the APK ships the same strings
+      # the tests ran against.
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Commit regenerated localizations
+        run: |
+          if ! git diff --quiet -- lib/l10n/generated; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add lib/l10n/generated
+            git commit -m "chore: regenerate localizations for 5.14.0"
+            git push
+          fi
+
       - name: Restore Android Keystore
         run: |
           mkdir -p android/app
           echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > android/app/release.keystore
           echo "Keystore restored successfully"
 
-      # ============================================
-      # CREATE KEY.PROPERTIES
-      # ============================================
       - name: Create key.properties
         run: |
           cat <<EOF > android/key.properties
@@ -69,116 +70,26 @@ jobs:
           EOF
           echo "key.properties created"
 
-      # ============================================
-      # INSTALL DEPENDENCIES
-      # ============================================
-      - name: Install Dependencies
-        run: flutter pub get
+      # Universal APK, matching the shape of the 5.13.4 release the project
+      # has been shipping, rather than the per-ABI split set.
+      - name: Build release APK
+        run: flutter build apk --release
 
-      # ============================================
-      # GENERATE VERSION INFO
-      # ============================================
-      - name: Generate Version Info
-        id: version
+      - name: Show output
         run: |
-          VERSION=$(grep "version:" pubspec.yaml | head -1 | awk '{print $2}')
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_OUTPUT
-          
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          echo "LAST_TAG=$LAST_TAG" >> $GITHUB_OUTPUT
-          
-          echo "Version: $VERSION"
-          echo "Build Number: ${{ github.run_number }}"
-          echo "Last Tag: $LAST_TAG"
-
-      # ============================================
-      # GENERATE CHANGELOG
-      # ============================================
-      - name: Generate Changelog
-        id: changelog
-        run: |
-          LAST_TAG="${{ steps.version.outputs.LAST_TAG }}"
-          
-          if [ "$LAST_TAG" != "v0.0.0" ]; then
-            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges $LAST_TAG..HEAD)
-          else
-            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges -20)
-          fi
-          
-          if [ -z "$CHANGELOG" ]; then
-            CHANGELOG="No changes detected."
-          fi
-          
-          # Modern and safe multi-line string handling for GITHUB_OUTPUT
-          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      # ============================================
-      # BUILD APKs
-      # ============================================
-      - name: Build Release APKs
-        run: flutter build apk --release --split-per-abi
-
-      # ============================================
-      # SHOW OUTPUT FILES & SIZE INFO
-      # ============================================
-      - name: Show Build Outputs & Size Info
-        run: |
-          echo "Generated APKs:"
           ls -la build/app/outputs/flutter-apk/
-          echo -e "\nAPK Sizes:"
-          du -h build/app/outputs/flutter-apk/*.apk | sort -hr
+          du -h build/app/outputs/flutter-apk/*.apk
 
-      # ============================================
-      # UPLOAD ARTIFACTS
-      # ============================================
-      - name: Upload APK Artifacts
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: split-apks-v${{ steps.version.outputs.VERSION }}
+          name: aspends-release-apk
           path: build/app/outputs/flutter-apk/*.apk
-          retention-days: 30
+          retention-days: 90
 
-      # ============================================
-      # CREATE GITHUB RELEASE
-      # ============================================
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        if: success()
+      - name: Upload APK to workflow
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: v${{ steps.version.outputs.VERSION }}-${{ github.run_number }}
-          name: Aspend v${{ steps.version.outputs.VERSION }} (Build ${{ github.run_number }})
-          body: |
-            ## 🚀 Release Information
-            
-            **Version:** v${{ steps.version.outputs.VERSION }}
-            **Build Number:** ${{ github.run_number }}
-            **Repository:** https://github.com/${{ github.repository }}
-            
-            ---
-            
-            ## 📋 Changelog
-            ${{ steps.changelog.outputs.CHANGELOG }}
-            
-            ---
-            
-            ## 🛠 Build Information
-            Built automatically using GitHub Actions with Flutter **3.32.4**.
-          files: build/app/outputs/flutter-apk/*.apk
-          draft: false
-          prerelease: false
-          generate_release_notes: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # ============================================
-      # SUCCESS MESSAGE
-      # ============================================
-      - name: Success Message
-        if: success()
-        run: |
-          echo "Release created successfully"
-          echo "APKs uploaded to GitHub Releases"
-          echo "Workflow completed"
+          name: apk-only
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 90
