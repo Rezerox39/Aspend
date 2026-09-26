@@ -143,7 +143,7 @@ void main() {
           shares: shares,
         );
 
-    test('net is zero when everyone splits evenly', () {
+    test('an even split leaves the payer owed the others\' shares', () {
       final balances = SettlementCalculator.computeBalances(
         members: ['Ana', 'Ben'],
         expenses: [
@@ -151,8 +151,20 @@ void main() {
         ],
       );
 
+      // Ana fronted all 100 but only owes 50 of it, so Ben still owes 50.
+      expect(balances['Ana']!.net, closeTo(50.0, 1e-9));
+      expect(balances['Ben']!.net, closeTo(-50.0, 1e-9));
+    });
+
+    test('a single member covering a lone expense ends settled', () {
+      final balances = SettlementCalculator.computeBalances(
+        members: ['Ana'],
+        expenses: [
+          expense(paidBy: 'Ana', amount: 100, shares: {'Ana': 100.0}),
+        ],
+      );
+
       expect(balances['Ana']!.net, closeTo(0.0, 1e-9));
-      expect(balances['Ben']!.net, closeTo(0.0, 1e-9));
     });
 
     test('payer is owed the other members’ shares', () {
@@ -215,11 +227,27 @@ void main() {
   });
 
   group('minimizeTransfers', () {
-    test('a single expense becomes one payment', () {
+    test('two debtors paying one creditor become two payments', () {
       final transfers = SettlementCalculator.minimizeTransfers({
         'Ana': const MemberBalance(name: 'Ana', paid: 90, owed: 30),
         'Ben': const MemberBalance(name: 'Ben', paid: 0, owed: 30),
         'Cleo': const MemberBalance(name: 'Cleo', paid: 0, owed: 30),
+      });
+
+      // Each of Ben and Cleo owes 30, so no single payment can cover both.
+      expect(transfers, hasLength(2));
+      expect(transfers.every((t) => t.to == 'Ana'), isTrue);
+      expect(transfers.map((t) => t.from).toSet(), {'Ben', 'Cleo'});
+      expect(
+        transfers.fold<double>(0.0, (sum, t) => sum + t.amount),
+        closeTo(60.0, 1e-9),
+      );
+    });
+
+    test('a lone debtor paying a lone creditor becomes one payment', () {
+      final transfers = SettlementCalculator.minimizeTransfers({
+        'Ana': const MemberBalance(name: 'Ana', paid: 100, owed: 40),
+        'Ben': const MemberBalance(name: 'Ben', paid: 0, owed: 60),
       });
 
       expect(transfers, hasLength(1));
@@ -269,7 +297,11 @@ void main() {
 
       final transfers = SettlementCalculator.minimizeTransfers(balances);
 
-      final after = <String, double>{'Ana': 0.0, 'Ben': 0.0, 'Cleo': 0.0};
+      // Apply the plan on top of the current nets and check everyone lands at
+      // zero — this is the property the settle-up screen depends on.
+      final after = <String, double>{
+        for (final entry in balances.entries) entry.key: entry.value.net,
+      };
       for (final t in transfers) {
         after[t.from] = after[t.from]! - t.amount;
         after[t.to] = after[t.to]! + t.amount;
