@@ -14,12 +14,17 @@ import 'core/models/person_transaction.dart';
 import 'core/models/theme.dart';
 import 'core/models/transaction.dart';
 import 'core/models/detection_history.dart';
+import 'core/models/trip.dart';
+import 'core/models/trip_expense.dart';
+import 'core/models/trip_settlement.dart';
 import 'core/repositories/transaction_repository.dart';
 import 'core/repositories/person_repository.dart';
 import 'core/repositories/settings_repository.dart';
+import 'core/repositories/trip_repository.dart';
 import 'core/view_models/transaction_view_model.dart';
 import 'core/view_models/theme_view_model.dart';
 import 'core/view_models/person_view_model.dart';
+import 'core/view_models/trip_view_model.dart';
 import 'screens/splash_screen.dart';
 import 'core/services/transaction_detection_service.dart';
 import 'core/services/native_bridge.dart';
@@ -40,6 +45,9 @@ void main() async {
   Hive.registerAdapter(PersonAdapter());
   Hive.registerAdapter(PersonTransactionAdapter());
   Hive.registerAdapter(DetectionHistoryAdapter());
+  Hive.registerAdapter(TripAdapter());
+  Hive.registerAdapter(TripExpenseAdapter());
+  Hive.registerAdapter(TripSettlementAdapter());
 
   try {
     await Future.wait([
@@ -52,6 +60,11 @@ void main() async {
         Hive.openBox<PersonTransaction>('personTransactions'),
       if (!Hive.isBoxOpen('detection_history'))
         Hive.openBox<DetectionHistory>('detection_history'),
+      if (!Hive.isBoxOpen('trips')) Hive.openBox<Trip>('trips'),
+      if (!Hive.isBoxOpen('tripExpenses'))
+        Hive.openBox<TripExpense>('tripExpenses'),
+      if (!Hive.isBoxOpen('tripSettlements'))
+        Hive.openBox<TripSettlement>('tripSettlements'),
     ]);
   } catch (e) {
     runApp(MaterialApp(
@@ -87,6 +100,7 @@ void main() async {
   final transactionRepo = TransactionRepository();
   final personRepo = PersonRepository();
   final settingsRepo = SettingsRepository();
+  final tripRepo = TripRepository();
 
   runApp(
     MultiProvider(
@@ -95,6 +109,7 @@ void main() async {
         ChangeNotifierProvider(
             create: (_) => TransactionViewModel(transactionRepo, settingsRepo)),
         ChangeNotifierProvider(create: (_) => PersonViewModel(personRepo)),
+        ChangeNotifierProvider(create: (_) => TripViewModel(tripRepo)),
       ],
       child: const MyApp(),
     ),

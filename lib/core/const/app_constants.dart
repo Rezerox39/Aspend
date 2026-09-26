@@ -6,6 +6,9 @@ class AppConstants {
   static const String peopleBox = 'people';
   static const String personTransactionsBox = 'personTransactions';
   static const String detectionHistoryBox = 'detection_history';
+  static const String tripsBox = 'trips';
+  static const String tripExpensesBox = 'tripExpenses';
+  static const String tripSettlementsBox = 'tripSettlements';
 
   // Settings Keys
   static const String themeKey = 'theme';

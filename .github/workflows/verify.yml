@@ -1,0 +1,38 @@
+name: Verify
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Analyze and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.32.4
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # The repo commits generated localizations, but they go stale whenever
+      # an .arb changes. Regenerating here means analyze/test always run
+      # against the same strings the app will actually ship.
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Test
+        run: flutter test
