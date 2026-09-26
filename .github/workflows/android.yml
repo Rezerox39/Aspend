@@ -44,14 +44,19 @@ jobs:
       - name: Generate localizations
         run: flutter gen-l10n
 
+      # Housekeeping only: keeps the committed generated files in step with
+      # the .arb sources. Concurrent runs can race on the push, so this is
+      # explicitly non-fatal — it must never block the APK.
       - name: Commit regenerated localizations
+        continue-on-error: true
         run: |
           if ! git diff --quiet -- lib/l10n/generated; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add lib/l10n/generated
-            git commit -m "chore: regenerate localizations for 5.14.0"
-            git push
+            git commit -m "chore: regenerate localizations"
+            git pull --rebase --autostash origin master
+            git push origin HEAD:master
           fi
 
       - name: Restore Android Keystore
