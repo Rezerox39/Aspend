@@ -298,13 +298,15 @@ void main() {
       final transfers = SettlementCalculator.minimizeTransfers(balances);
 
       // Apply the plan on top of the current nets and check everyone lands at
-      // zero — this is the property the settle-up screen depends on.
+      // zero — this is the property the settle-up screen depends on. Paying
+      // someone back raises the payer's net (their debt shrinks) and lowers
+      // the receiver's, matching computeBalances' treatment of settlements.
       final after = <String, double>{
         for (final entry in balances.entries) entry.key: entry.value.net,
       };
       for (final t in transfers) {
-        after[t.from] = after[t.from]! - t.amount;
-        after[t.to] = after[t.to]! + t.amount;
+        after[t.from] = after[t.from]! + t.amount;
+        after[t.to] = after[t.to]! - t.amount;
       }
 
       expect(after['Ana']!.abs(), lessThan(SettlementCalculator.epsilon));
