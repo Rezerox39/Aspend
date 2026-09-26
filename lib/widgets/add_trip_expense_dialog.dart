@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -180,7 +181,7 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
               Text(
                 widget.existingExpense == null
                     ? l10n.addTripExpense
-                    : l10n.editItemTitle,
+                    : l10n.editItemTitle(l10n.tripExpenses),
                 style: GoogleFonts.dmSans(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,

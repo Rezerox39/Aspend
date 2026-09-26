@@ -9,7 +9,6 @@ import '../core/const/app_typography.dart';
 import '../core/models/trip.dart';
 import '../core/models/trip_expense.dart';
 import '../core/models/trip_settlement.dart';
-import '../core/services/settlement_calculator.dart';
 import '../core/view_models/person_view_model.dart';
 import '../core/view_models/theme_view_model.dart';
 import '../core/view_models/trip_view_model.dart';
@@ -17,7 +16,6 @@ import '../l10n/generated/app_localizations.dart';
 import '../widgets/add_trip_dialog.dart';
 import '../widgets/add_trip_expense_dialog.dart';
 import '../widgets/empty_state_view.dart';
-import '../widgets/member_avatar.dart';
 import '../widgets/settle_up_card.dart';
 import '../widgets/trip_expense_tile.dart';
 

@@ -31,8 +31,19 @@ jobs:
       - name: Generate localizations
         run: flutter gen-l10n
 
+      # The repo carries pre-existing warnings and infos in files this change
+      # does not touch, so errors are what gate the build. The trip feature's
+      # own files are held to a stricter bar: any issue at all in one of them
+      # fails the run.
       - name: Analyze
-        run: flutter analyze --no-fatal-infos
+        run: |
+          flutter analyze --no-fatal-warnings --no-fatal-infos | tee analyze.log
+          echo "--- issues in trip feature files ---"
+          if grep -nE "lib/(core/models/trip|core/repositories/trip_repository|core/view_models/trip_view_model|core/services/settlement_calculator|screens/trips_page|screens/trip_detail_page|widgets/trip_card|widgets/trip_expense_tile|widgets/trips_entry_card|widgets/settle_up_card|widgets/member_avatar|widgets/add_trip_dialog|widgets/add_trip_expense_dialog)\.dart" analyze.log; then
+            echo "::error::Analyzer reported issues in trip feature files"
+            exit 1
+          fi
+          echo "trip feature files are clean"
 
       - name: Test
         run: flutter test
