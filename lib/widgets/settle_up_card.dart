@@ -59,7 +59,7 @@ class SettleUpCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (isSettled)
-            Row(
+            const Row(
               children: [
                 Icon(Icons.check_circle_rounded,
                     color: AppColors.accentGreen,
