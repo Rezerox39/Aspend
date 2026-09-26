@@ -709,5 +709,12 @@
   "splitExactHint": "हर व्यक्ति की सही राशि दर्ज करें",
   "splitPreviewHint": "हिस्से निकटतम पैसे तक पूर्ण किए जाते हैं",
   "archiveTrip": "यात्रा संग्रहित करें",
-  "unarchiveTrip": "यात्रा संग्रहण से हटाएँ"
+  "unarchiveTrip": "यात्रा संग्रहण से हटाएँ",
+  "tripExpenseTitle": "किस लिए?",
+  "tripCatTravel": "यात्रा",
+  "tripCatFood": "खाना",
+  "tripCatTransport": "यात्रा-मार्ग",
+  "tripCatShopping": "खरीदारी",
+  "tripCatEntertainment": "मनोरंजन",
+  "tripCatOther": "अन्य"
 }

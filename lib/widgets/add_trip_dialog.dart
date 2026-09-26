@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../core/const/app_colors.dart';
 import '../core/const/app_dimensions.dart';
 import '../core/models/trip.dart';
 import '../core/utils/blur_utils.dart';

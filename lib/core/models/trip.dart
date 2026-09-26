@@ -45,7 +45,7 @@ class Trip extends HiveObject {
   Trip({
     required this.name,
     required this.startDate,
-    required this.memberNames,
+    required List<String> memberNames,
     this.destination,
     this.endDate,
     this.coverPhotoPath,

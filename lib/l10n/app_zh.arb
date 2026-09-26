@@ -709,5 +709,12 @@
   "splitExactHint": "输入每个人应付的准确金额",
   "splitPreviewHint": "份额四舍五入到最接近的分",
   "archiveTrip": "归档旅行",
-  "unarchiveTrip": "取消归档旅行"
+  "unarchiveTrip": "取消归档旅行",
+  "tripExpenseTitle": "花在什么上？",
+  "tripCatTravel": "交通",
+  "tripCatFood": "餐饮",
+  "tripCatTransport": "交通",
+  "tripCatShopping": "购物",
+  "tripCatEntertainment": "娱乐",
+  "tripCatOther": "其他"
 }

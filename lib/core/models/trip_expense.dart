@@ -70,7 +70,7 @@ class TripExpense extends HiveObject {
     required this.amount,
     required this.paidBy,
     required this.date,
-    required this.shares,
+    required Map<String, double> shares,
     this.category = 'other',
     this.splitModeIndex = 0,
     this.note,

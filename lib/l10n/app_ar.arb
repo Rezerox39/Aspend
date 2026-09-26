@@ -709,5 +709,12 @@
   "splitExactHint": "أدخل المبلغ الدقيق المستحق لكل شخص",
   "splitPreviewHint": "تُقرَّب الحصص إلى أقرب بيسا",
   "archiveTrip": "أرشفة الرحلة",
-  "unarchiveTrip": "إلغاء أرشفة الرحلة"
+  "unarchiveTrip": "إلغاء أرشفة الرحلة",
+  "tripExpenseTitle": "على ماذا؟",
+  "tripCatTravel": "سفر",
+  "tripCatFood": "طعام",
+  "tripCatTransport": "نقل",
+  "tripCatShopping": "تسوق",
+  "tripCatEntertainment": "ترفيه",
+  "tripCatOther": "أخرى"
 }

@@ -709,5 +709,12 @@
   "splitExactHint": "Insira a quantia exata que cada pessoa deve",
   "splitPreviewHint": "As cotas são arredondadas ao paisa mais próximo",
   "archiveTrip": "Arquivar viagem",
-  "unarchiveTrip": "Desarquivar viagem"
+  "unarchiveTrip": "Desarquivar viagem",
+  "tripExpenseTitle": "Para que foi?",
+  "tripCatTravel": "Viagem",
+  "tripCatFood": "Comida",
+  "tripCatTransport": "Transporte",
+  "tripCatShopping": "Compras",
+  "tripCatEntertainment": "Lazer",
+  "tripCatOther": "Outro"
 }

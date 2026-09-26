@@ -709,5 +709,12 @@
   "splitExactHint": "Introduce la cantidad exacta que debe cada persona",
   "splitPreviewHint": "Las partes se redondean al paisa más cercano",
   "archiveTrip": "Archivar viaje",
-  "unarchiveTrip": "Desarchivar viaje"
+  "unarchiveTrip": "Desarchivar viaje",
+  "tripExpenseTitle": "¿Para qué fue?",
+  "tripCatTravel": "Viaje",
+  "tripCatFood": "Comida",
+  "tripCatTransport": "Transporte",
+  "tripCatShopping": "Compras",
+  "tripCatEntertainment": "Ocio",
+  "tripCatOther": "Otro"
 }

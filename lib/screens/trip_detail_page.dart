@@ -88,7 +88,7 @@ class TripDetailPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  _dateRange(trip),
+                  _dateRange(context, trip),
                   style: GoogleFonts.dmSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -134,7 +134,7 @@ class TripDetailPage extends StatelessWidget {
               children: [
                 _summary(context, trip, viewModel, currencySymbol),
                 const SizedBox(height: AppDimensions.spacingLarge),
-                _sectionTitle(l10n.settleUpTitle),
+                _sectionTitle(context, l10n.settleUpTitle),
                 const SizedBox(height: AppDimensions.spacingMedium),
                 SettleUpCard(
                   balances: balances,
@@ -155,7 +155,7 @@ class TripDetailPage extends StatelessWidget {
                       viewModel.deleteSettlement(settlement),
                 ),
                 const SizedBox(height: AppDimensions.spacingLarge),
-                _sectionTitle(l10n.tripExpenses),
+                _sectionTitle(context, l10n.tripExpenses),
                 const SizedBox(height: AppDimensions.spacingMedium),
                 if (expenses.isEmpty)
                   Padding(
@@ -185,7 +185,7 @@ class TripDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _sectionTitle(String text) => Text(
+  Widget _sectionTitle(BuildContext context, String text) => Text(
         text,
         style: GoogleFonts.dmSans(
           fontSize: AppTypography.fontSizeMedium,
@@ -194,9 +194,11 @@ class TripDetailPage extends StatelessWidget {
         ),
       );
 
-  String _dateRange(Trip trip) {
+  String _dateRange(BuildContext context, Trip trip) {
     final start = DateFormat('MMM d, yyyy').format(trip.startDate);
-    if (trip.endDate == null) return '$start – ${AppLocalizations.of(context)!.ongoing}';
+    if (trip.endDate == null) {
+      return '$start – ${AppLocalizations.of(context)!.ongoing}';
+    }
     return '$start – ${DateFormat('MMM d, yyyy').format(trip.endDate!)}';
   }
 

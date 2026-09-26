@@ -10,7 +10,6 @@ import '../core/view_models/trip_view_model.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../widgets/add_trip_dialog.dart';
 import '../widgets/empty_state_view.dart';
-import '../widgets/glass_app_bar.dart';
 import '../widgets/trip_card.dart';
 import 'trip_detail_page.dart';
 

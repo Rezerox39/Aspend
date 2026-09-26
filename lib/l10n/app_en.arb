@@ -709,5 +709,12 @@
   "splitExactHint": "Enter the exact amount each person owes",
   "splitPreviewHint": "Shares are rounded to the nearest paisa",
   "archiveTrip": "Archive trip",
-  "unarchiveTrip": "Unarchive trip"
+  "unarchiveTrip": "Unarchive trip",
+  "tripExpenseTitle": "What was it for?",
+  "tripCatTravel": "Travel",
+  "tripCatFood": "Food",
+  "tripCatTransport": "Transport",
+  "tripCatShopping": "Shopping",
+  "tripCatEntertainment": "Fun",
+  "tripCatOther": "Other"
 }

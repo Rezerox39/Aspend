@@ -709,5 +709,12 @@
   "splitExactHint": "各人の金額を正確に入力してください",
   "splitPreviewHint": "口数は最も近い paisa に丸められます",
   "archiveTrip": "旅行をアーカイブ",
-  "unarchiveTrip": "アーカイブを解除"
+  "unarchiveTrip": "アーカイブを解除",
+  "tripExpenseTitle": "何に使った？",
+  "tripCatTravel": "旅行",
+  "tripCatFood": "食事",
+  "tripCatTransport": "移動",
+  "tripCatShopping": "買い物",
+  "tripCatEntertainment": "娯楽",
+  "tripCatOther": "その他"
 }

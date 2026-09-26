@@ -709,5 +709,12 @@
   "splitExactHint": "Gib den genauen Betrag ein, den jede Person schuldet",
   "splitPreviewHint": "Anteile werden auf den nächsten Paisa gerundet",
   "archiveTrip": "Reise archivieren",
-  "unarchiveTrip": "Reise wiederherstellen"
+  "unarchiveTrip": "Reise wiederherstellen",
+  "tripExpenseTitle": "Wofür?",
+  "tripCatTravel": "Reisen",
+  "tripCatFood": "Essen",
+  "tripCatTransport": "Transport",
+  "tripCatShopping": "Einkaufen",
+  "tripCatEntertainment": "Spaß",
+  "tripCatOther": "Sonstiges"
 }

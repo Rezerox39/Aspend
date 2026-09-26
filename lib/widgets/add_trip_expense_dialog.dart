@@ -52,14 +52,24 @@ class AddTripExpenseDialog extends StatefulWidget {
 
 class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
   /// Categories that make sense on a trip, reusing the app's existing icon set.
-  static const Map<String, String> _categories = {
-    'travel': SvgAppIcons.travelIcon,
-    'food': SvgAppIcons.foodIcon,
-    'transport': SvgAppIcons.transportIcon,
-    'shopping': SvgAppIcons.shoppingIcon,
-    'entertainment': SvgAppIcons.entertainmentIcon,
-    'other': SvgAppIcons.genericCategoryIcon,
-  };
+  /// Key order here is the order they appear in the picker.
+  static const List<String> _categories = [
+    'travel',
+    'food',
+    'transport',
+    'shopping',
+    'entertainment',
+    'other',
+  ];
+
+  static String _iconForCategory(String category) => switch (category) {
+        'travel' => SvgAppIcons.travelIcon,
+        'food' => SvgAppIcons.foodIcon,
+        'transport' => SvgAppIcons.transportIcon,
+        'shopping' => SvgAppIcons.shoppingIcon,
+        'entertainment' => SvgAppIcons.entertainmentIcon,
+        _ => SvgAppIcons.genericCategoryIcon,
+      };
 
   late final TextEditingController _titleController;
   late final TextEditingController _amountController;
@@ -84,9 +94,10 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
     _noteController = TextEditingController(text: existing?.note ?? '');
     _mode = existing?.splitMode ?? SplitMode.equal;
     _paidBy = existing?.paidBy ?? widget.trip.memberNames.first;
-    _category = (existing?.category ?? 'other') == 'other'
-        ? 'other'
-        : (existing!.category);
+    final savedCategory = existing?.category;
+    _category = (savedCategory != null && _categories.contains(savedCategory))
+        ? savedCategory
+        : 'other';
     _date = existing?.date ?? DateTime.now();
     _participants = {...?existing?.shares.keys}..addAll(widget.trip.memberNames);
 
@@ -135,7 +146,7 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
         amount: _amount,
         mode: _mode,
         participants: _participants.toList(),
-        inputs: _mode == SplitMode.exact ? _weights : _weights,
+        inputs: _weights,
       );
 
   @override
@@ -209,6 +220,9 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
                         ),
                         decoration: _decoration('0'),
                       ),
+                      const SizedBox(height: AppDimensions.spacingLarge),
+                      _label(l10n.category),
+                      _categoryRow(context),
                       const SizedBox(height: AppDimensions.spacingLarge),
                       _label(l10n.paidBy),
                       _payerRow(context),
@@ -302,6 +316,81 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
           borderSide: BorderSide.none,
         ),
       );
+
+  Widget _categoryRow(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final labels = <String, String>{
+      'travel': l10n.tripCatTravel,
+      'food': l10n.tripCatFood,
+      'transport': l10n.tripCatTransport,
+      'shopping': l10n.tripCatShopping,
+      'entertainment': l10n.tripCatEntertainment,
+      'other': l10n.tripCatOther,
+    };
+
+    return SizedBox(
+      height: 40,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: _categories.length,
+        separatorBuilder: (_, __) =>
+            const SizedBox(width: AppDimensions.spacingSmall),
+        itemBuilder: (context, index) {
+          final key = _categories[index];
+          final selected = key == _category;
+          return GestureDetector(
+            onTap: () => setState(() => _category = key),
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(10, 6, 14, 6),
+              decoration: BoxDecoration(
+                color: selected
+                    ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                    : theme.colorScheme.surfaceContainerHighest
+                        .withValues(alpha: 0.4),
+                borderRadius:
+                    BorderRadius.circular(AppDimensions.borderRadiusFull),
+                border: Border.all(
+                  color: selected
+                      ? theme.colorScheme.primary.withValues(alpha: 0.35)
+                      : Colors.transparent,
+                  width: 1.2,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    _iconForCategory(key),
+                    width: AppDimensions.iconSizeSmall,
+                    height: AppDimensions.iconSizeSmall,
+                    colorFilter: ColorFilter.mode(
+                      selected
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    labels[key]!,
+                    style: GoogleFonts.dmSans(
+                      fontSize: 12,
+                      fontWeight:
+                          selected ? FontWeight.w700 : FontWeight.w500,
+                      color: selected
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   Widget _payerRow(BuildContext context) {
     return SizedBox(

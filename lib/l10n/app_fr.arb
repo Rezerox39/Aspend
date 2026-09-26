@@ -709,5 +709,12 @@
   "splitExactHint": "Saisissez le montant exact dû par chaque personne",
   "splitPreviewHint": "Les parts sont arrondies au paisa près",
   "archiveTrip": "Archiver le voyage",
-  "unarchiveTrip": "Désarchiver le voyage"
+  "unarchiveTrip": "Désarchiver le voyage",
+  "tripExpenseTitle": "Pour quoi ?",
+  "tripCatTravel": "Voyage",
+  "tripCatFood": "Repas",
+  "tripCatTransport": "Transport",
+  "tripCatShopping": "Shopping",
+  "tripCatEntertainment": "Sorties",
+  "tripCatOther": "Autre"
 }

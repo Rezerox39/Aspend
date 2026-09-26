@@ -709,5 +709,12 @@
   "splitExactHint": "Введите точную сумму, которую должен каждый",
   "splitPreviewHint": "Доли округляются до ближайшей пайсы",
   "archiveTrip": "Архивировать поездку",
-  "unarchiveTrip": "Разархивировать поездку"
+  "unarchiveTrip": "Разархивировать поездку",
+  "tripExpenseTitle": "На что?",
+  "tripCatTravel": "Поездка",
+  "tripCatFood": "Еда",
+  "tripCatTransport": "Транспорт",
+  "tripCatShopping": "Покупки",
+  "tripCatEntertainment": "Развлечения",
+  "tripCatOther": "Другое"
 }

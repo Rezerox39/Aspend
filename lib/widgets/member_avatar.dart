@@ -81,7 +81,7 @@ class MemberAvatar extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: hasPhoto
-          ? _photo(photoPath!)
+          ? _photo(context, photoPath!)
           : Center(
               child: Text(
                 initialsFor(name),
@@ -95,7 +95,7 @@ class MemberAvatar extends StatelessWidget {
     );
   }
 
-  Widget _photo(String path) {
+  Widget _photo(BuildContext context, String path) {
     final isAsset = path.startsWith('assets/');
     return isAsset
         ? Image.asset(
