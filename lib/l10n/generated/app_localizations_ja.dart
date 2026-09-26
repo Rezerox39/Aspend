@@ -1393,4 +1393,142 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get replayTipsDone =>
       'Tips will show again next time you open those screens.';
+
+  @override
+  String get trips => '旅行';
+
+  @override
+  String get newTrip => '新しい旅行';
+
+  @override
+  String get editTrip => '旅行を編集';
+
+  @override
+  String get deleteTrip => '旅行を削除しますか？';
+
+  @override
+  String get deleteTripDesc => '旅行とすべての経費・精算が削除されます。元に戻せません。';
+
+  @override
+  String get tripName => '旅行名';
+
+  @override
+  String get tripDestination => '目的地';
+
+  @override
+  String get tripDates => '日付';
+
+  @override
+  String get tripMembers => 'メンバー';
+
+  @override
+  String get ongoing => '進行中';
+
+  @override
+  String get noTripsTitle => '旅行がまだありません';
+
+  @override
+  String get noTripsDesc => '旅行を作成して友人と共通の費用を分けましょう';
+
+  @override
+  String get tripTotalSpent => '合計支出';
+
+  @override
+  String get perPerson => '一人あたり';
+
+  @override
+  String get outstanding => '未精算';
+
+  @override
+  String get allSettled => 'すべて精算済み';
+
+  @override
+  String get allSettledDesc => '全員が精算済みです';
+
+  @override
+  String get settleUpTitle => '精算';
+
+  @override
+  String get settleUpDesc => '残高を締めるための支払い提案';
+
+  @override
+  String get settlementHistory => '支払い履歴';
+
+  @override
+  String get recordSettlement => '支払い済みにする';
+
+  @override
+  String get isOwed => 'に請求あり';
+
+  @override
+  String get owes => 'の支払いあり';
+
+  @override
+  String get tripExpenses => '経費';
+
+  @override
+  String get addTripExpense => '経費を追加';
+
+  @override
+  String get noExpensesTitle => '経費がまだありません';
+
+  @override
+  String get noExpensesDesc => 'この旅行の最初の共通経費を追加しましょう';
+
+  @override
+  String get toBePaidBack => '回収';
+
+  @override
+  String get paidBy => '支払者';
+
+  @override
+  String get splitMode => '分割方法';
+
+  @override
+  String get splitEqually => '均等';
+
+  @override
+  String get splitExact => '金額';
+
+  @override
+  String get splitShares => '口数';
+
+  @override
+  String get splitPercentage => '割合';
+
+  @override
+  String get splitBetween => '分割対象';
+
+  @override
+  String get splitExactHint => '各人の金額を正確に入力してください';
+
+  @override
+  String get splitPreviewHint => '口数は最も近い paisa に丸められます';
+
+  @override
+  String get archiveTrip => '旅行をアーカイブ';
+
+  @override
+  String get unarchiveTrip => 'アーカイブを解除';
+
+  @override
+  String get tripExpenseTitle => '何に使った？';
+
+  @override
+  String get tripCatTravel => '旅行';
+
+  @override
+  String get tripCatFood => '食事';
+
+  @override
+  String get tripCatTransport => '移動';
+
+  @override
+  String get tripCatShopping => '買い物';
+
+  @override
+  String get tripCatEntertainment => '娯楽';
+
+  @override
+  String get tripCatOther => 'その他';
 }

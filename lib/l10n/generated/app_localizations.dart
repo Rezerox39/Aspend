@@ -2699,6 +2699,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tips will show again next time you open those screens.'**
   String get replayTipsDone;
+
+  /// No description provided for @trips.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips'**
+  String get trips;
+
+  /// No description provided for @newTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'New Trip'**
+  String get newTrip;
+
+  /// No description provided for @editTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Trip'**
+  String get editTrip;
+
+  /// No description provided for @deleteTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete trip?'**
+  String get deleteTrip;
+
+  /// No description provided for @deleteTripDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This deletes the trip along with all of its expenses and settlements. This cannot be undone.'**
+  String get deleteTripDesc;
+
+  /// No description provided for @tripName.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip name'**
+  String get tripName;
+
+  /// No description provided for @tripDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get tripDestination;
+
+  /// No description provided for @tripDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates'**
+  String get tripDates;
+
+  /// No description provided for @tripMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get tripMembers;
+
+  /// No description provided for @ongoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ongoing'**
+  String get ongoing;
+
+  /// No description provided for @noTripsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No trips yet'**
+  String get noTripsTitle;
+
+  /// No description provided for @noTripsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a trip to split shared costs with friends'**
+  String get noTripsDesc;
+
+  /// No description provided for @tripTotalSpent.
+  ///
+  /// In en, this message translates to:
+  /// **'Total spent'**
+  String get tripTotalSpent;
+
+  /// No description provided for @perPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Per person'**
+  String get perPerson;
+
+  /// No description provided for @outstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding'**
+  String get outstanding;
+
+  /// No description provided for @allSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'All settled'**
+  String get allSettled;
+
+  /// No description provided for @allSettledDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone is settled up'**
+  String get allSettledDesc;
+
+  /// No description provided for @settleUpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settle up'**
+  String get settleUpTitle;
+
+  /// No description provided for @settleUpDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested payments to close the balance'**
+  String get settleUpDesc;
+
+  /// No description provided for @settlementHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments made'**
+  String get settlementHistory;
+
+  /// No description provided for @recordSettlement.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as paid'**
+  String get recordSettlement;
+
+  /// No description provided for @isOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'is owed'**
+  String get isOwed;
+
+  /// No description provided for @owes.
+  ///
+  /// In en, this message translates to:
+  /// **'owes'**
+  String get owes;
+
+  /// No description provided for @tripExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get tripExpenses;
+
+  /// No description provided for @addTripExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Add expense'**
+  String get addTripExpense;
+
+  /// No description provided for @noExpensesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses yet'**
+  String get noExpensesTitle;
+
+  /// No description provided for @noExpensesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the first shared expense for this trip'**
+  String get noExpensesDesc;
+
+  /// No description provided for @toBePaidBack.
+  ///
+  /// In en, this message translates to:
+  /// **'to get back'**
+  String get toBePaidBack;
+
+  /// No description provided for @paidBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid by'**
+  String get paidBy;
+
+  /// No description provided for @splitMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Split'**
+  String get splitMode;
+
+  /// No description provided for @splitEqually.
+  ///
+  /// In en, this message translates to:
+  /// **'Equally'**
+  String get splitEqually;
+
+  /// No description provided for @splitExact.
+  ///
+  /// In en, this message translates to:
+  /// **'Exact'**
+  String get splitExact;
+
+  /// No description provided for @splitShares.
+  ///
+  /// In en, this message translates to:
+  /// **'Shares'**
+  String get splitShares;
+
+  /// No description provided for @splitPercentage.
+  ///
+  /// In en, this message translates to:
+  /// **'Percent'**
+  String get splitPercentage;
+
+  /// No description provided for @splitBetween.
+  ///
+  /// In en, this message translates to:
+  /// **'Split between'**
+  String get splitBetween;
+
+  /// No description provided for @splitExactHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the exact amount each person owes'**
+  String get splitExactHint;
+
+  /// No description provided for @splitPreviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Shares are rounded to the nearest paisa'**
+  String get splitPreviewHint;
+
+  /// No description provided for @archiveTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive trip'**
+  String get archiveTrip;
+
+  /// No description provided for @unarchiveTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive trip'**
+  String get unarchiveTrip;
+
+  /// No description provided for @tripExpenseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What was it for?'**
+  String get tripExpenseTitle;
+
+  /// No description provided for @tripCatTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get tripCatTravel;
+
+  /// No description provided for @tripCatFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get tripCatFood;
+
+  /// No description provided for @tripCatTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get tripCatTransport;
+
+  /// No description provided for @tripCatShopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get tripCatShopping;
+
+  /// No description provided for @tripCatEntertainment.
+  ///
+  /// In en, this message translates to:
+  /// **'Fun'**
+  String get tripCatEntertainment;
+
+  /// No description provided for @tripCatOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get tripCatOther;
 }
 
 class _AppLocalizationsDelegate

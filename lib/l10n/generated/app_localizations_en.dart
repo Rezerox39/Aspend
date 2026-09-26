@@ -1424,4 +1424,143 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get replayTipsDone =>
       'Tips will show again next time you open those screens.';
+
+  @override
+  String get trips => 'Trips';
+
+  @override
+  String get newTrip => 'New Trip';
+
+  @override
+  String get editTrip => 'Edit Trip';
+
+  @override
+  String get deleteTrip => 'Delete trip?';
+
+  @override
+  String get deleteTripDesc =>
+      'This deletes the trip along with all of its expenses and settlements. This cannot be undone.';
+
+  @override
+  String get tripName => 'Trip name';
+
+  @override
+  String get tripDestination => 'Destination';
+
+  @override
+  String get tripDates => 'Dates';
+
+  @override
+  String get tripMembers => 'Members';
+
+  @override
+  String get ongoing => 'Ongoing';
+
+  @override
+  String get noTripsTitle => 'No trips yet';
+
+  @override
+  String get noTripsDesc => 'Create a trip to split shared costs with friends';
+
+  @override
+  String get tripTotalSpent => 'Total spent';
+
+  @override
+  String get perPerson => 'Per person';
+
+  @override
+  String get outstanding => 'Outstanding';
+
+  @override
+  String get allSettled => 'All settled';
+
+  @override
+  String get allSettledDesc => 'Everyone is settled up';
+
+  @override
+  String get settleUpTitle => 'Settle up';
+
+  @override
+  String get settleUpDesc => 'Suggested payments to close the balance';
+
+  @override
+  String get settlementHistory => 'Payments made';
+
+  @override
+  String get recordSettlement => 'Mark as paid';
+
+  @override
+  String get isOwed => 'is owed';
+
+  @override
+  String get owes => 'owes';
+
+  @override
+  String get tripExpenses => 'Expenses';
+
+  @override
+  String get addTripExpense => 'Add expense';
+
+  @override
+  String get noExpensesTitle => 'No expenses yet';
+
+  @override
+  String get noExpensesDesc => 'Add the first shared expense for this trip';
+
+  @override
+  String get toBePaidBack => 'to get back';
+
+  @override
+  String get paidBy => 'Paid by';
+
+  @override
+  String get splitMode => 'Split';
+
+  @override
+  String get splitEqually => 'Equally';
+
+  @override
+  String get splitExact => 'Exact';
+
+  @override
+  String get splitShares => 'Shares';
+
+  @override
+  String get splitPercentage => 'Percent';
+
+  @override
+  String get splitBetween => 'Split between';
+
+  @override
+  String get splitExactHint => 'Enter the exact amount each person owes';
+
+  @override
+  String get splitPreviewHint => 'Shares are rounded to the nearest paisa';
+
+  @override
+  String get archiveTrip => 'Archive trip';
+
+  @override
+  String get unarchiveTrip => 'Unarchive trip';
+
+  @override
+  String get tripExpenseTitle => 'What was it for?';
+
+  @override
+  String get tripCatTravel => 'Travel';
+
+  @override
+  String get tripCatFood => 'Food';
+
+  @override
+  String get tripCatTransport => 'Transport';
+
+  @override
+  String get tripCatShopping => 'Shopping';
+
+  @override
+  String get tripCatEntertainment => 'Fun';
+
+  @override
+  String get tripCatOther => 'Other';
 }

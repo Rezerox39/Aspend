@@ -1379,4 +1379,142 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get replayTipsDone =>
       'Tips will show again next time you open those screens.';
+
+  @override
+  String get trips => '旅行';
+
+  @override
+  String get newTrip => '新建旅行';
+
+  @override
+  String get editTrip => '编辑旅行';
+
+  @override
+  String get deleteTrip => '删除旅行？';
+
+  @override
+  String get deleteTripDesc => '这将删除该旅行及其所有支出和结算。此操作无法撤销。';
+
+  @override
+  String get tripName => '旅行名称';
+
+  @override
+  String get tripDestination => '目的地';
+
+  @override
+  String get tripDates => '日期';
+
+  @override
+  String get tripMembers => '成员';
+
+  @override
+  String get ongoing => '进行中';
+
+  @override
+  String get noTripsTitle => '暂无旅行';
+
+  @override
+  String get noTripsDesc => '创建旅行，与好友分摊共同费用';
+
+  @override
+  String get tripTotalSpent => '总支出';
+
+  @override
+  String get perPerson => '人均';
+
+  @override
+  String get outstanding => '待结算';
+
+  @override
+  String get allSettled => '已全部结清';
+
+  @override
+  String get allSettledDesc => '所有人都已结清';
+
+  @override
+  String get settleUpTitle => '结算';
+
+  @override
+  String get settleUpDesc => '结清余额的建议付款';
+
+  @override
+  String get settlementHistory => '已付款项';
+
+  @override
+  String get recordSettlement => '标记为已付';
+
+  @override
+  String get isOwed => '应收';
+
+  @override
+  String get owes => '应付';
+
+  @override
+  String get tripExpenses => '支出';
+
+  @override
+  String get addTripExpense => '添加支出';
+
+  @override
+  String get noExpensesTitle => '暂无支出';
+
+  @override
+  String get noExpensesDesc => '添加此旅行的第一笔共同支出';
+
+  @override
+  String get toBePaidBack => '待收回';
+
+  @override
+  String get paidBy => '付款人';
+
+  @override
+  String get splitMode => '分摊方式';
+
+  @override
+  String get splitEqually => '均摊';
+
+  @override
+  String get splitExact => '金额';
+
+  @override
+  String get splitShares => '份额';
+
+  @override
+  String get splitPercentage => '百分比';
+
+  @override
+  String get splitBetween => '分摊对象';
+
+  @override
+  String get splitExactHint => '输入每个人应付的准确金额';
+
+  @override
+  String get splitPreviewHint => '份额四舍五入到最接近的分';
+
+  @override
+  String get archiveTrip => '归档旅行';
+
+  @override
+  String get unarchiveTrip => '取消归档旅行';
+
+  @override
+  String get tripExpenseTitle => '花在什么上？';
+
+  @override
+  String get tripCatTravel => '交通';
+
+  @override
+  String get tripCatFood => '餐饮';
+
+  @override
+  String get tripCatTransport => '交通';
+
+  @override
+  String get tripCatShopping => '购物';
+
+  @override
+  String get tripCatEntertainment => '娱乐';
+
+  @override
+  String get tripCatOther => '其他';
 }

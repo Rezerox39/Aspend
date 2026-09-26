@@ -1421,4 +1421,143 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get replayTipsDone =>
       'Tips will show again next time you open those screens.';
+
+  @override
+  String get trips => 'الرحلات';
+
+  @override
+  String get newTrip => 'رحلة جديدة';
+
+  @override
+  String get editTrip => 'تعديل الرحلة';
+
+  @override
+  String get deleteTrip => 'حذف الرحلة؟';
+
+  @override
+  String get deleteTripDesc =>
+      'سيؤدي هذا إلى حذف الرحلة مع جميع نفقاتها وتسوياتها. لا يمكن التراجع عن ذلك.';
+
+  @override
+  String get tripName => 'اسم الرحلة';
+
+  @override
+  String get tripDestination => 'الوجهة';
+
+  @override
+  String get tripDates => 'التواريخ';
+
+  @override
+  String get tripMembers => 'الأعضاء';
+
+  @override
+  String get ongoing => 'جارية';
+
+  @override
+  String get noTripsTitle => 'لا توجد رحلات بعد';
+
+  @override
+  String get noTripsDesc => 'أنشئ رحلة لتقسيم المصاريف المشتركة مع الأصدقاء';
+
+  @override
+  String get tripTotalSpent => 'إجمالي المصروف';
+
+  @override
+  String get perPerson => 'لكل شخص';
+
+  @override
+  String get outstanding => 'المستحق';
+
+  @override
+  String get allSettled => 'تمت تسوية الكل';
+
+  @override
+  String get allSettledDesc => 'الجميع في وضع متعادل';
+
+  @override
+  String get settleUpTitle => 'التسوية';
+
+  @override
+  String get settleUpDesc => 'المدفوعات المقترحة لإغلاق الرصيد';
+
+  @override
+  String get settlementHistory => 'المدفوعات المنفذة';
+
+  @override
+  String get recordSettlement => 'وضع علامة مدفوع';
+
+  @override
+  String get isOwed => 'له مستحق';
+
+  @override
+  String get owes => 'عليه';
+
+  @override
+  String get tripExpenses => 'المصروفات';
+
+  @override
+  String get addTripExpense => 'إضافة مصروف';
+
+  @override
+  String get noExpensesTitle => 'لا توجد مصروفات بعد';
+
+  @override
+  String get noExpensesDesc => 'أضف أول مصروف مشترك لهذه الرحلة';
+
+  @override
+  String get toBePaidBack => 'للاسترداد';
+
+  @override
+  String get paidBy => 'دفعه';
+
+  @override
+  String get splitMode => 'التقسيم';
+
+  @override
+  String get splitEqually => 'بالتساوي';
+
+  @override
+  String get splitExact => 'بالمبلغ';
+
+  @override
+  String get splitShares => 'حصص';
+
+  @override
+  String get splitPercentage => 'نسبة مئوية';
+
+  @override
+  String get splitBetween => 'التقسيم بين';
+
+  @override
+  String get splitExactHint => 'أدخل المبلغ الدقيق المستحق لكل شخص';
+
+  @override
+  String get splitPreviewHint => 'تُقرَّب الحصص إلى أقرب بيسا';
+
+  @override
+  String get archiveTrip => 'أرشفة الرحلة';
+
+  @override
+  String get unarchiveTrip => 'إلغاء أرشفة الرحلة';
+
+  @override
+  String get tripExpenseTitle => 'على ماذا؟';
+
+  @override
+  String get tripCatTravel => 'سفر';
+
+  @override
+  String get tripCatFood => 'طعام';
+
+  @override
+  String get tripCatTransport => 'نقل';
+
+  @override
+  String get tripCatShopping => 'تسوق';
+
+  @override
+  String get tripCatEntertainment => 'ترفيه';
+
+  @override
+  String get tripCatOther => 'أخرى';
 }

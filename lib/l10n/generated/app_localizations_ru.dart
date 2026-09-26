@@ -1443,4 +1443,144 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get replayTipsDone =>
       'Tips will show again next time you open those screens.';
+
+  @override
+  String get trips => 'Поездки';
+
+  @override
+  String get newTrip => 'Новая поездка';
+
+  @override
+  String get editTrip => 'Изменить поездку';
+
+  @override
+  String get deleteTrip => 'Удалить поездку?';
+
+  @override
+  String get deleteTripDesc =>
+      'Поездка будет удалена вместе со всеми расходами и расчётами. Это нельзя отменить.';
+
+  @override
+  String get tripName => 'Название поездки';
+
+  @override
+  String get tripDestination => 'Место назначения';
+
+  @override
+  String get tripDates => 'Даты';
+
+  @override
+  String get tripMembers => 'Участники';
+
+  @override
+  String get ongoing => 'В процессе';
+
+  @override
+  String get noTripsTitle => 'Поездок пока нет';
+
+  @override
+  String get noTripsDesc =>
+      'Создайте поездку, чтобы разделить расходы с друзьями';
+
+  @override
+  String get tripTotalSpent => 'Всего потрачено';
+
+  @override
+  String get perPerson => 'На человека';
+
+  @override
+  String get outstanding => 'К выплате';
+
+  @override
+  String get allSettled => 'Всё рассчитано';
+
+  @override
+  String get allSettledDesc => 'Все рассчитались';
+
+  @override
+  String get settleUpTitle => 'Рассчитаться';
+
+  @override
+  String get settleUpDesc => 'Предлагаемые платежи для закрытия баланса';
+
+  @override
+  String get settlementHistory => 'Выполненные платежи';
+
+  @override
+  String get recordSettlement => 'Отметить как оплаченное';
+
+  @override
+  String get isOwed => 'ему должны';
+
+  @override
+  String get owes => 'должен';
+
+  @override
+  String get tripExpenses => 'Расходы';
+
+  @override
+  String get addTripExpense => 'Добавить расход';
+
+  @override
+  String get noExpensesTitle => 'Расходов пока нет';
+
+  @override
+  String get noExpensesDesc => 'Добавьте первый общий расход поездки';
+
+  @override
+  String get toBePaidBack => 'к возврату';
+
+  @override
+  String get paidBy => 'Оплатил';
+
+  @override
+  String get splitMode => 'Разделение';
+
+  @override
+  String get splitEqually => 'Поровну';
+
+  @override
+  String get splitExact => 'Сумма';
+
+  @override
+  String get splitShares => 'Доли';
+
+  @override
+  String get splitPercentage => 'Процент';
+
+  @override
+  String get splitBetween => 'Разделить между';
+
+  @override
+  String get splitExactHint => 'Введите точную сумму, которую должен каждый';
+
+  @override
+  String get splitPreviewHint => 'Доли округляются до ближайшей пайсы';
+
+  @override
+  String get archiveTrip => 'Архивировать поездку';
+
+  @override
+  String get unarchiveTrip => 'Разархивировать поездку';
+
+  @override
+  String get tripExpenseTitle => 'На что?';
+
+  @override
+  String get tripCatTravel => 'Поездка';
+
+  @override
+  String get tripCatFood => 'Еда';
+
+  @override
+  String get tripCatTransport => 'Транспорт';
+
+  @override
+  String get tripCatShopping => 'Покупки';
+
+  @override
+  String get tripCatEntertainment => 'Развлечения';
+
+  @override
+  String get tripCatOther => 'Другое';
 }

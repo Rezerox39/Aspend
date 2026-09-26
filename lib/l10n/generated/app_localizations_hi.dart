@@ -1430,4 +1430,143 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get replayTipsDone =>
       'Tips will show again next time you open those screens.';
+
+  @override
+  String get trips => 'यात्राएँ';
+
+  @override
+  String get newTrip => 'नई यात्रा';
+
+  @override
+  String get editTrip => 'यात्रा संपादित करें';
+
+  @override
+  String get deleteTrip => 'यात्रा हटाएँ?';
+
+  @override
+  String get deleteTripDesc =>
+      'इससे यात्रा उसके सभी खर्चों और निपटान के साथ हट जाएगी। इसे पूर्ववत नहीं किया जा सकता।';
+
+  @override
+  String get tripName => 'यात्रा का नाम';
+
+  @override
+  String get tripDestination => 'गंतव्य';
+
+  @override
+  String get tripDates => 'तिथियाँ';
+
+  @override
+  String get tripMembers => 'सदस्य';
+
+  @override
+  String get ongoing => 'चल रही है';
+
+  @override
+  String get noTripsTitle => 'अभी तक कोई यात्रा नहीं';
+
+  @override
+  String get noTripsDesc => 'दोस्तों के साथ खर्च बाँटने के लिए यात्रा बनाएँ';
+
+  @override
+  String get tripTotalSpent => 'कुल खर्च';
+
+  @override
+  String get perPerson => 'प्रति व्यक्ति';
+
+  @override
+  String get outstanding => 'बकाया';
+
+  @override
+  String get allSettled => 'सब हिसाब बराबर';
+
+  @override
+  String get allSettledDesc => 'सबका हिसाब बराबर है';
+
+  @override
+  String get settleUpTitle => 'निपटान';
+
+  @override
+  String get settleUpDesc => 'शेष राशि समाप्त करने के लिए सुझाए गए भुगतान';
+
+  @override
+  String get settlementHistory => 'किए गए भुगतान';
+
+  @override
+  String get recordSettlement => 'भुगतान चिह्नित करें';
+
+  @override
+  String get isOwed => 'पाने का हकदार';
+
+  @override
+  String get owes => 'देना है';
+
+  @override
+  String get tripExpenses => 'खर्च';
+
+  @override
+  String get addTripExpense => 'खर्च जोड़ें';
+
+  @override
+  String get noExpensesTitle => 'अभी तक कोई खर्च नहीं';
+
+  @override
+  String get noExpensesDesc => 'इस यात्रा का पहला साझा खर्च जोड़ें';
+
+  @override
+  String get toBePaidBack => 'वापस पाने के लिए';
+
+  @override
+  String get paidBy => 'किसने दिया';
+
+  @override
+  String get splitMode => 'विभाजन';
+
+  @override
+  String get splitEqually => 'बराबर';
+
+  @override
+  String get splitExact => 'राशि';
+
+  @override
+  String get splitShares => 'हिस्से';
+
+  @override
+  String get splitPercentage => 'प्रतिशत';
+
+  @override
+  String get splitBetween => 'किसके बीच बाँटें';
+
+  @override
+  String get splitExactHint => 'हर व्यक्ति की सही राशि दर्ज करें';
+
+  @override
+  String get splitPreviewHint => 'हिस्से निकटतम पैसे तक पूर्ण किए जाते हैं';
+
+  @override
+  String get archiveTrip => 'यात्रा संग्रहित करें';
+
+  @override
+  String get unarchiveTrip => 'यात्रा संग्रहण से हटाएँ';
+
+  @override
+  String get tripExpenseTitle => 'किस लिए?';
+
+  @override
+  String get tripCatTravel => 'यात्रा';
+
+  @override
+  String get tripCatFood => 'खाना';
+
+  @override
+  String get tripCatTransport => 'यात्रा-मार्ग';
+
+  @override
+  String get tripCatShopping => 'खरीदारी';
+
+  @override
+  String get tripCatEntertainment => 'मनोरंजन';
+
+  @override
+  String get tripCatOther => 'अन्य';
 }
