@@ -71,7 +71,9 @@ jobs:
           storePassword=${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword=${{ secrets.KEY_PASSWORD }}
           keyAlias=${{ secrets.KEY_ALIAS }}
-          storeFile=../app/release.keystore
+          # `rootProject` is android/, so this is android/app/release.keystore.
+          # The previous ../app/ resolved to <repo>/app/ and failed signing.
+          storeFile=app/release.keystore
           EOF
           echo "key.properties created"
 
