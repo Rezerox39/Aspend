@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../core/utils/image_cache_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -173,9 +174,13 @@ class _PersonaAvatar extends StatelessWidget {
                     borderRadius:
                         BorderRadius.circular(AppDimensions.borderRadiusMinLarge),
                     child: person.photoPath!.startsWith('assets/')
-                        ? Image.asset(person.photoPath!, fit: BoxFit.cover)
+                        ? Image.asset(person.photoPath!,
+                            fit: BoxFit.cover,
+                            cacheWidth: cacheWidthFor(context, 88))
                         : Image.file(File(person.photoPath!),
-                            fit: BoxFit.cover),
+                            fit: BoxFit.cover,
+                            cacheWidth: cacheWidthFor(context, 88),
+                            filterQuality: FilterQuality.medium),
                   )
                 : Icon(Icons.person_rounded,
                     color: theme.colorScheme.primary, size: 32),

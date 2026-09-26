@@ -30,6 +30,7 @@ import '../core/const/app_colors.dart';
 import '../core/const/app_dimensions.dart';
 import '../core/const/app_typography.dart';
 import '../core/utils/blur_utils.dart';
+import '../core/utils/image_cache_utils.dart';
 import 'package:aspends_tracker/l10n/generated/app_localizations.dart';
 
 class PeopleTab extends StatefulWidget {
@@ -173,12 +174,17 @@ class _PeopleTabState extends State<PeopleTab> {
                                 AppDimensions.borderRadiusFull),
                             child: selectedPhotoPath!.startsWith('assets/')
                                 ? Image.asset(selectedPhotoPath!,
-                                    width: 96, height: 96, fit: BoxFit.cover)
+                                    width: 96,
+                                    height: 96,
+                                    fit: BoxFit.cover,
+                                    cacheWidth: cacheWidthFor(context, 96))
                                 : Image.file(
                                     File(selectedPhotoPath!),
                                     width: 96,
                                     height: 96,
                                     fit: BoxFit.cover,
+                                    cacheWidth: cacheWidthFor(context, 96),
+                                    filterQuality: FilterQuality.medium,
                                   ),
                           )
                         : Column(
@@ -614,11 +620,23 @@ class _PeopleTabState extends State<PeopleTab> {
                                                                 'assets/')
                                                         ? Image.asset(
                                                             person.photoPath!,
-                                                            fit: BoxFit.cover)
+                                                            fit: BoxFit.cover,
+                                                            cacheWidth:
+                                                                cacheWidthFor(
+                                                                    context,
+                                                                    48),
+                                                          )
                                                         : Image.file(
                                                             File(person
                                                                 .photoPath!),
                                                             fit: BoxFit.cover,
+                                                            cacheWidth:
+                                                                cacheWidthFor(
+                                                                    context,
+                                                                    48),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .medium,
                                                           ),
                                                   )
                                                 : Icon(Icons.person_rounded,

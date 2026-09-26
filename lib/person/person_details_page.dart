@@ -4,6 +4,7 @@ import 'package:aspends_tracker/core/const/app_colors.dart';
 import 'package:aspends_tracker/core/const/app_dimensions.dart';
 import 'package:aspends_tracker/widgets/floating_action_button.dart';
 import 'package:flutter/material.dart';
+import '../core/utils/image_cache_utils.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -695,12 +696,17 @@ class _PersonDetailPageState extends State<PersonDetailPage>
                             child: (selectedPhotoPath!.startsWith('assets/') ||
                                     selectedPhotoPath!.startsWith('http'))
                                 ? Image.asset(selectedPhotoPath!,
-                                    width: 96, height: 96, fit: BoxFit.cover)
+                                    width: 96,
+                                    height: 96,
+                                    fit: BoxFit.cover,
+                                    cacheWidth: cacheWidthFor(context, 96))
                                 : Image.file(
                                     File(selectedPhotoPath!),
                                     width: 96,
                                     height: 96,
                                     fit: BoxFit.cover,
+                                    cacheWidth: cacheWidthFor(context, 96),
+                                    filterQuality: FilterQuality.medium,
                                   ),
                           )
                         : Column(

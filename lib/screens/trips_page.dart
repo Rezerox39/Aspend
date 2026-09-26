@@ -93,13 +93,17 @@ class TripsPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final trip = trips[index];
                       final tripId = trip.key.toString();
-                      return TripCard(
-                        trip: trip,
-                        totalSpent: viewModel.totalSpent(tripId),
-                        perPerson: viewModel.averagePerMember(tripId),
-                        outstanding: viewModel.outstandingFor(tripId),
-                        photoPaths: photoPaths,
-                        onTap: () => _openTrip(context, trip),
+                      // Each card repaints in isolation, so scrolling the list
+                      // does not dirty a layer covering every visible card.
+                      return RepaintBoundary(
+                        child: TripCard(
+                          trip: trip,
+                          totalSpent: viewModel.totalSpent(tripId),
+                          perPerson: viewModel.averagePerMember(tripId),
+                          outstanding: viewModel.outstandingFor(tripId),
+                          photoPaths: photoPaths,
+                          onTap: () => _openTrip(context, trip),
+                        ),
                       );
                     },
                   ),

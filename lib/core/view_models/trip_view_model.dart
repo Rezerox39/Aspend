@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aspends_tracker/core/models/trip.dart';
 import 'package:aspends_tracker/core/models/trip_expense.dart';
 import 'package:aspends_tracker/core/models/trip_settlement.dart';
@@ -19,6 +21,13 @@ class TripViewModel extends ChangeNotifier {
   List<TripSettlement> _settlements = [];
 
   bool _showArchived = false;
+
+  /// A single write fans out into several Hive box events (the explicit
+  /// reload after the write, plus one event per box the repository touched),
+  /// and every one of those used to trigger a full re-index and a rebuild of
+  /// every listening widget. Reloads are now coalesced into the microtask
+  /// queue, so one user action costs exactly one re-index and one rebuild.
+  bool _reloadScheduled = false;
 
   // Memoisation. Balances and settle-up plans are derived per trip and are
   // comparatively expensive, so they are cached and only dropped when the
@@ -104,53 +113,64 @@ class TripViewModel extends ChangeNotifier {
 
   Future<void> addTrip(Trip trip) async {
     await _repository.addTrip(trip);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> updateTrip(Trip oldTrip, Trip updated) async {
     await _repository.updateTrip(oldTrip.key, updated);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> deleteTrip(Trip trip) async {
     await _repository.deleteTrip(trip.key);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> setTripArchived(Trip trip, bool archived) async {
     trip.isArchived = archived;
     await _repository.updateTrip(trip.key, trip);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> addExpense(TripExpense expense) async {
     await _repository.addExpense(expense);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> updateExpense(TripExpense oldExpense, TripExpense updated) async {
     await _repository.updateExpense(oldExpense.key, updated);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> deleteExpense(TripExpense expense) async {
     await _repository.deleteExpense(expense.key);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> addSettlement(TripSettlement settlement) async {
     await _repository.addSettlement(settlement);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> deleteSettlement(TripSettlement settlement) async {
     await _repository.deleteSettlement(settlement.key);
-    _loadData();
+    _scheduleReload();
   }
 
   Future<void> deleteAllData() async {
     await _repository.clearAllTripsData();
-    _loadData();
+    _scheduleReload();
+  }
+
+  /// Queues a single re-index + notify for everything that happened in this
+  /// microtask, instead of one per underlying write.
+  void _scheduleReload() {
+    if (_reloadScheduled) return;
+    _reloadScheduled = true;
+    scheduleMicrotask(() {
+      _reloadScheduled = false;
+      _loadData();
+    });
   }
 
   // ------------------------------------------------------------- internals
@@ -220,8 +240,8 @@ class TripViewModel extends ChangeNotifier {
   }
 
   void _subscribeToChanges() {
-    _repository.watchTrips().listen((_) => _loadData());
-    _repository.watchExpenses().listen((_) => _loadData());
-    _repository.watchSettlements().listen((_) => _loadData());
+    _repository.watchTrips().listen((_) => _scheduleReload());
+    _repository.watchExpenses().listen((_) => _scheduleReload());
+    _repository.watchSettlements().listen((_) => _scheduleReload());
   }
 }

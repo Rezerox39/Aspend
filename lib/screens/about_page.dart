@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:aspends_tracker/core/utils/blur_utils.dart';
 import 'package:flutter/material.dart';
+import '../core/utils/image_cache_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -107,6 +108,7 @@ class AboutPage extends StatelessWidget {
                             child: Image.asset(
                               'assets/icons/Main_logo_transparent.png',
                               fit: BoxFit.contain,
+                              cacheWidth: cacheWidthFor(context, 160),
                             ),
                           ),
                         ),

@@ -121,63 +121,87 @@ class TripDetailPage extends StatelessWidget {
               ),
             ],
           ),
+          // The summary and settle-up block are fixed-height, so they sit in
+          // their own slivers. The expense list below is the part that can
+          // grow without bound on a long trip, so it gets a lazy builder
+          // rather than being materialised up front.
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(
               AppDimensions.paddingStandard,
               AppDimensions.spacingSmall,
               AppDimensions.paddingStandard,
-              96,
+              0,
             ),
-            sliver: SliverList.list(
-              children: [
-                _summary(context, trip, viewModel, currencySymbol),
-                const SizedBox(height: AppDimensions.spacingLarge),
-                _sectionTitle(context, l10n.settleUpTitle),
-                const SizedBox(height: AppDimensions.spacingMedium),
-                SettleUpCard(
-                  balances: balances,
-                  plan: plan,
-                  photoPaths: photoPaths,
-                  currencySymbol: currencySymbol,
-                  outstanding: viewModel.outstandingFor(tripId),
-                  isSettled: viewModel.isFullySettled(tripId),
-                  settlements: viewModel.settlementsFor(tripId),
-                  onRecord: (from, to, amount) => _recordSettlement(
-                    context,
-                    trip,
-                    from: from,
-                    to: to,
-                    amount: amount,
-                  ),
-                  onDeleteSettlement: (settlement) =>
-                      viewModel.deleteSettlement(settlement),
-                ),
-                const SizedBox(height: AppDimensions.spacingLarge),
-                _sectionTitle(context, l10n.tripExpenses),
-                const SizedBox(height: AppDimensions.spacingMedium),
-                if (expenses.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
-                    child: EmptyStateView(
-                      icon: Icons.receipt_long_rounded,
-                      accentColor: AppColors.accentAmber,
-                      title: l10n.noExpensesTitle,
-                      description: l10n.noExpensesDesc,
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _summary(context, trip, viewModel, currencySymbol),
+                  const SizedBox(height: AppDimensions.spacingLarge),
+                  _sectionTitle(context, l10n.settleUpTitle),
+                  const SizedBox(height: AppDimensions.spacingMedium),
+                  SettleUpCard(
+                    balances: balances,
+                    plan: plan,
+                    photoPaths: photoPaths,
+                    currencySymbol: currencySymbol,
+                    outstanding: viewModel.outstandingFor(tripId),
+                    isSettled: viewModel.isFullySettled(tripId),
+                    settlements: viewModel.settlementsFor(tripId),
+                    onRecord: (from, to, amount) => _recordSettlement(
+                      context,
+                      trip,
+                      from: from,
+                      to: to,
+                      amount: amount,
                     ),
-                  )
-                else
-                  for (final expense in expenses)
-                    TripExpenseTile(
+                    onDeleteSettlement: (settlement) =>
+                        viewModel.deleteSettlement(settlement),
+                  ),
+                  const SizedBox(height: AppDimensions.spacingLarge),
+                  _sectionTitle(context, l10n.tripExpenses),
+                  const SizedBox(height: AppDimensions.spacingMedium),
+                  if (expenses.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: EmptyStateView(
+                        icon: Icons.receipt_long_rounded,
+                        accentColor: AppColors.accentAmber,
+                        title: l10n.noExpensesTitle,
+                        description: l10n.noExpensesDesc,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          if (expenses.isNotEmpty)
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                AppDimensions.paddingStandard,
+                0,
+                AppDimensions.paddingStandard,
+                96,
+              ),
+              sliver: SliverList.builder(
+                itemCount: expenses.length,
+                itemBuilder: (context, index) {
+                  final expense = expenses[index];
+                  return RepaintBoundary(
+                    child: TripExpenseTile(
                       expense: expense,
                       currencySymbol: currencySymbol,
                       photoPaths: photoPaths,
-                      onTap: () => _editExpense(
-                          context, trip, expense, photoPaths),
+                      onTap: () =>
+                          _editExpense(context, trip, expense, photoPaths),
                       onDelete: () => viewModel.deleteExpense(expense),
                     ),
-              ],
-            ),
-          ),
+                  );
+                },
+              ),
+            )
+          else
+            const SliverToBoxAdapter(child: SizedBox(height: 96)),
         ],
       ),
     );
