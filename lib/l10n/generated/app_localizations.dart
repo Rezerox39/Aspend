@@ -2975,6 +2975,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get tripCatOther;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @tripBaseCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip currency'**
+  String get tripBaseCurrency;
+
+  /// No description provided for @tripCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid in'**
+  String get tripCurrency;
+
+  /// No description provided for @tripExchangeRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange rate'**
+  String get tripExchangeRate;
+
+  /// No description provided for @tripMembersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No members yet. Add everyone who shares costs on this trip.'**
+  String get tripMembersEmpty;
+
+  /// No description provided for @tripMemberNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a name'**
+  String get tripMemberNameHint;
+
+  /// No description provided for @tripMemberDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Already on this trip'**
+  String get tripMemberDuplicate;
+
+  /// No description provided for @tripMemberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get tripMemberLabel;
+
+  /// No description provided for @tripMemberPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get tripMemberPhone;
+
+  /// No description provided for @tripMemberEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get tripMemberEmail;
+
+  /// No description provided for @tripMemberRemoveDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this person from the trip? Past expenses that involve them are kept.'**
+  String get tripMemberRemoveDesc;
 }
 
 class _AppLocalizationsDelegate

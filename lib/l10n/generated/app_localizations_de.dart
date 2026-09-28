@@ -1591,4 +1591,39 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tripCatOther => 'Sonstiges';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get tripBaseCurrency => 'Trip currency';
+
+  @override
+  String get tripCurrency => 'Paid in';
+
+  @override
+  String get tripExchangeRate => 'Exchange rate';
+
+  @override
+  String get tripMembersEmpty =>
+      'No members yet. Add everyone who shares costs on this trip.';
+
+  @override
+  String get tripMemberNameHint => 'Add a name';
+
+  @override
+  String get tripMemberDuplicate => 'Already on this trip';
+
+  @override
+  String get tripMemberLabel => 'Label';
+
+  @override
+  String get tripMemberPhone => 'Phone';
+
+  @override
+  String get tripMemberEmail => 'Email';
+
+  @override
+  String get tripMemberRemoveDesc =>
+      'Remove this person from the trip? Past expenses that involve them are kept.';
 }
