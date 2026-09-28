@@ -17,6 +17,7 @@ class SettleUpCard extends StatelessWidget {
     required this.balances,
     required this.plan,
     required this.photoPaths,
+    required this.nameFor,
     required this.currencySymbol,
     required this.outstanding,
     required this.isSettled,
@@ -27,7 +28,14 @@ class SettleUpCard extends StatelessWidget {
 
   final Map<String, MemberBalance> balances;
   final List<SettlementTransfer> plan;
+  /// Photos, keyed by member id, for members who also exist in the People tab.
   final Map<String, String?> photoPaths;
+
+  /// Turns a member id into something a person recognises. Balances and
+  /// transfers stay keyed by id — that is what a recorded settlement writes —
+  /// so the id is only ever resolved here, for display.
+  final String Function(String key) nameFor;
+
   final String currencySymbol;
   final double outstanding;
   final bool isSettled;
@@ -149,7 +157,7 @@ class SettleUpCard extends StatelessWidget {
         const SizedBox(width: AppDimensions.spacingMedium),
         Expanded(
           child: Text(
-            balance.name,
+            nameFor(balance.name),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.dmSans(
@@ -201,14 +209,14 @@ class SettleUpCard extends StatelessWidget {
             child: Row(
               children: [
                 MemberAvatar(
-                  name: transfer.from,
+                  name: nameFor(transfer.from),
                   photoPath: photoPaths[transfer.from],
                   size: 24,
                 ),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
-                    transfer.from,
+                    nameFor(transfer.from),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.dmSans(
@@ -224,14 +232,14 @@ class SettleUpCard extends StatelessWidget {
                         theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                 const SizedBox(width: 6),
                 MemberAvatar(
-                  name: transfer.to,
+                  name: nameFor(transfer.to),
                   photoPath: photoPaths[transfer.to],
                   size: 24,
                 ),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
-                    transfer.to,
+                    nameFor(transfer.to),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.dmSans(
@@ -284,7 +292,7 @@ class SettleUpCard extends StatelessWidget {
           const SizedBox(width: AppDimensions.spacingSmall),
           Expanded(
             child: Text(
-              '${settlement.fromMember} → ${settlement.toMember}'
+              '${nameFor(settlement.fromMember)} → ${nameFor(settlement.toMember)}'
               '  ·  ${DateFormat('MMM d').format(settlement.date)}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

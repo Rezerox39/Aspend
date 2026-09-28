@@ -27,13 +27,16 @@ class TripExpenseAdapter extends TypeAdapter<TripExpense> {
       shares: (fields[7] as Map).cast<String, double>(),
       note: fields[8] as String?,
       receiptPaths: (fields[9] as List?)?.cast<String>(),
+      currency: fields[10] as String? ?? 'INR',
+      exchangeRateToBase: fields[11] as double? ?? 1.0,
+      originalAmount: fields[12] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, TripExpense obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.tripId)
       ..writeByte(1)
@@ -53,7 +56,13 @@ class TripExpenseAdapter extends TypeAdapter<TripExpense> {
       ..writeByte(8)
       ..write(obj.note)
       ..writeByte(9)
-      ..write(obj.receiptPaths);
+      ..write(obj.receiptPaths)
+      ..writeByte(10)
+      ..write(obj.currency)
+      ..writeByte(11)
+      ..write(obj.exchangeRateToBase)
+      ..writeByte(12)
+      ..write(obj.originalAmount);
   }
 
   @override

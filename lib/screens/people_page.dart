@@ -24,8 +24,6 @@ import '../../widgets/modern_card.dart';
 import '../../widgets/glass_app_bar.dart';
 import '../../widgets/empty_state_view.dart';
 import '../../widgets/empty_state_illustrations.dart';
-import '../../widgets/trips_entry_card.dart';
-import 'trips_page.dart';
 import '../core/const/app_colors.dart';
 import '../core/const/app_dimensions.dart';
 import '../core/const/app_typography.dart';
@@ -503,13 +501,6 @@ class _PeopleTabState extends State<PeopleTab> {
               GlassAppBar(
                 title: l10n.people,
                 centerTitle: true,
-              ),
-              SliverToBoxAdapter(
-                child: TripsEntryCard(
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const TripsPage()),
-                  ),
-                ),
               ),
               SliverPersistentHeader(
                 pinned: true,

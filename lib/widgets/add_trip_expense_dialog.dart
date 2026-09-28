@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../core/const/app_assets.dart';
+import '../core/const/app_currencies.dart';
 import '../core/const/app_dimensions.dart';
 import '../core/models/trip.dart';
 import '../core/models/trip_expense.dart';
@@ -85,22 +86,37 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
   late DateTime _date;
   late Set<String> _participants;
 
+  /// The currency this expense was actually paid in. Defaults to the trip's, so
+  /// a single-currency trip never asks about money it does not need to convert.
+  late String _currency;
+  late final TextEditingController _rateController;
+
   @override
   void initState() {
     super.initState();
     final existing = widget.existingExpense;
     _titleController = TextEditingController(text: existing?.title ?? '');
+    _currency = existing?.currency ?? widget.trip.baseCurrency;
     _amountController = TextEditingController(
-        text: existing == null ? '' : _trimZeros(existing.amount));
+      text: existing == null
+          ? ''
+          : _trimZeros(existing.originalAmount ?? existing.amount),
+    );
+    _rateController = TextEditingController(
+      text: existing == null || existing.exchangeRateToBase == 1.0
+          ? ''
+          : _trimZeros(existing.exchangeRateToBase),
+    );
     _noteController = TextEditingController(text: existing?.note ?? '');
     _mode = existing?.splitMode ?? SplitMode.equal;
-    _paidBy = existing?.paidBy ?? widget.trip.memberNames.first;
+    _paidBy = existing?.paidBy ?? widget.trip.effectiveMembers.first.id;
     final savedCategory = existing?.category;
     _category = (savedCategory != null && _categories.contains(savedCategory))
         ? savedCategory
         : 'other';
     _date = existing?.date ?? DateTime.now();
-    _participants = {...?existing?.shares.keys}..addAll(widget.trip.memberNames);
+    _participants = {...?existing?.shares.keys}
+      ..addAll(widget.trip.effectiveMembers.map((m) => m.id));
 
     if (existing != null) {
       // Seed the weight fields from the saved split so switching back into a
@@ -125,6 +141,7 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
     _titleController.dispose();
     _amountController.dispose();
     _noteController.dispose();
+    _rateController.dispose();
     for (final controller in _inputControllers.values) {
       controller.dispose();
     }
@@ -132,6 +149,20 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
   }
 
   double get _amount => double.tryParse(_amountController.text.trim()) ?? 0.0;
+
+  /// True when this expense is in something other than the trip's currency,
+  /// which is the only case where a rate is asked for.
+  bool get _isForeign => _currency != widget.trip.baseCurrency;
+
+  /// The rate typed by the user. 1.0 whenever no conversion is involved, so the
+  /// maths never has to special-case a same-currency expense.
+  double get _rate =>
+      _isForeign ? (double.tryParse(_rateController.text.trim()) ?? 0.0) : 1.0;
+
+  /// What the trip actually books: the entered amount converted into the trip's
+  /// base currency, rounded to whole minor units so it still splits to a whole
+  /// number of cents.
+  double get _baseAmount => TripExpense.toBaseAmount(_amount, _rate);
 
   Map<String, double> get _weights {
     final weights = <String, double>{};
@@ -144,7 +175,7 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
 
   Map<String, double> get _previewShares =>
       SettlementCalculator.buildShares(
-        amount: _amount,
+        amount: _baseAmount,
         mode: _mode,
         participants: _participants.toList(),
         inputs: _weights,
@@ -155,7 +186,7 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final currencySymbol =
-        context.select<ThemeViewModel, String>((vm) => vm.currencySymbol);
+        AppCurrencies.byCode(_currency).symbol;
     final preview = _previewShares;
 
     return Dialog(
@@ -221,6 +252,42 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
                         ),
                         decoration: _decoration('0'),
                       ),
+                      const SizedBox(height: AppDimensions.spacingStandard),
+                      _label(l10n.tripCurrency),
+                      _currencyRow(context),
+                      if (_isForeign) ...[
+                        const SizedBox(height: AppDimensions.spacingStandard),
+                        _label(l10n.tripExchangeRate),
+                        TextField(
+                          controller: _rateController,
+                          keyboardType:
+                              const TextInputType.numberWithOptions(decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                          ],
+                          onChanged: (_) => setState(() {}),
+                          style: GoogleFonts.dmSans(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                          decoration: _decoration(
+                              '1 ${AppCurrencies.byCode(widget.trip.baseCurrency).code} = ? ${_currency}'),
+                        ),
+                        if (_rate > 0)
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: AppDimensions.spacingSmall),
+                            child: Text(
+                              '= ${AppCurrencies.byCode(widget.trip.baseCurrency).symbol}${_baseAmount.toStringAsFixed(2)} ${widget.trip.baseCurrency}',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 12,
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.6),
+                              ),
+                            ),
+                          ),
+                      ],
                       const SizedBox(height: AppDimensions.spacingLarge),
                       _label(l10n.category),
                       _categoryRow(context),
@@ -398,10 +465,10 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
       height: 44,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: widget.trip.memberNames.length,
+        itemCount: widget.trip.effectiveMembers.length,
         separatorBuilder: (_, __) => const SizedBox(width: AppDimensions.spacingSmall),
         itemBuilder: (context, index) {
-          final member = widget.trip.memberNames[index];
+          final member = widget.trip.effectiveMembers[index].id;
           final selected = member == _paidBy;
           final theme = Theme.of(context);
           return GestureDetector(
@@ -521,7 +588,7 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
 
     return Column(
       children: [
-        for (final member in widget.trip.memberNames)
+        for (final member in widget.trip.effectiveMembers.map((m) => m.id).toList())
           Padding(
             padding: const EdgeInsets.only(bottom: AppDimensions.spacingSmall),
             child: Row(
@@ -650,12 +717,15 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
     final expense = TripExpense(
       tripId: widget.trip.key.toString(),
       title: _titleController.text.trim(),
-      amount: _amount,
+      amount: _baseAmount,
       paidBy: _paidBy,
       date: _date,
       shares: _previewShares,
       category: _category,
       splitModeIndex: _mode.index,
+      currency: _currency,
+      exchangeRateToBase: _rate,
+      originalAmount: _isForeign ? _amount : null,
       note: _noteController.text.trim().isEmpty
           ? null
           : _noteController.text.trim(),

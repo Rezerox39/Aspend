@@ -248,6 +248,7 @@ class _NativeGlassNavBarState extends State<NativeGlassNavBar> {
   IconData _getIconData(String symbol) {
     switch (symbol) {
       case 'house': return Icons.home_rounded;
+      case 'suitcase': return Icons.luggage_rounded;
       case 'person.2': return Icons.group_rounded;
       case 'chart.xyaxis.line': return Icons.auto_graph_rounded;
       case 'gear': return Icons.settings_rounded;
@@ -341,6 +342,7 @@ class _IconsLiquidLayer extends StatelessWidget {
   IconData _getIconData(String symbol) {
     switch (symbol) {
       case 'house': return Icons.home_rounded;
+      case 'suitcase': return Icons.luggage_rounded;
       case 'person.2': return Icons.group_rounded;
       case 'chart.xyaxis.line': return Icons.auto_graph_rounded;
       case 'gear': return Icons.settings_rounded;

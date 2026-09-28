@@ -28,6 +28,14 @@ enum SplitMode {
 /// storing the raw inputs and recomputing it. That keeps balance maths a plain
 /// sum over saved data, so editing a trip's members later can never silently
 /// rewrite what past expenses meant.
+///
+/// ### Currencies
+///
+/// [amount] and [shares] are always in the **trip's base currency**, so every
+/// balance, split and settle-up stays in one unit and can reach exactly zero.
+/// An expense paid in another currency keeps what was actually spent in
+/// [originalAmount] and [currency], plus the [exchangeRateToBase] that turned it
+/// into the base amount, purely so the person can see what they really paid.
 @HiveType(typeId: 7)
 class TripExpense extends HiveObject {
   /// [Trip.key] as a string, so an expense does not need the trip object itself.
@@ -37,10 +45,11 @@ class TripExpense extends HiveObject {
   @HiveField(1)
   String title;
 
+  /// Always the trip's base-currency amount.
   @HiveField(2)
   double amount;
 
-  /// Name of the member who fronted the money.
+  /// Id of the member who fronted the money.
   @HiveField(3)
   String paidBy;
 
@@ -53,8 +62,8 @@ class TripExpense extends HiveObject {
   @HiveField(6)
   int splitModeIndex;
 
-  /// Member name -> the amount that member owes for this expense. Always sums
-  /// to exactly [amount].
+  /// Member id -> the base-currency amount that member owes. Always sums to
+  /// exactly [amount].
   @HiveField(7)
   Map<String, double> shares;
 
@@ -63,6 +72,21 @@ class TripExpense extends HiveObject {
 
   @HiveField(9)
   List<String>? receiptPaths;
+
+  /// The currency this expense was actually entered in. Equals the trip's base
+  /// currency unless it was a foreign purchase.
+  @HiveField(10)
+  String currency;
+
+  /// How many units of [currency] one unit of the base currency is worth. 1.0
+  /// for a same-currency expense.
+  @HiveField(11)
+  double exchangeRateToBase;
+
+  /// What was paid, in [currency]. Null when the expense is already in the
+  /// trip's base currency, so there is nothing extra to show.
+  @HiveField(12)
+  double? originalAmount;
 
   TripExpense({
     required this.tripId,
@@ -75,9 +99,20 @@ class TripExpense extends HiveObject {
     this.splitModeIndex = 0,
     this.note,
     this.receiptPaths,
+    this.currency = 'INR',
+    this.exchangeRateToBase = 1.0,
+    this.originalAmount,
   }) : shares = Map<String, double>.from(shares);
 
   SplitMode get splitMode => SplitMode.fromIndex(splitModeIndex);
+
+  /// True when this expense was paid in a currency other than the trip's.
+  bool get isForeign => originalAmount != null;
+
+  /// Converts a foreign amount into the base currency, rounded to whole minor
+  /// units so a converted expense still splits to a whole number of cents.
+  static double toBaseAmount(double amount, double rate) =>
+      (amount * rate).roundToDouble();
 
   /// What [paidBy] is owed back in total for this expense.
   double get owedToPayer {
@@ -102,5 +137,8 @@ class TripExpense extends HiveObject {
         'shares': shares,
         'note': note,
         'receiptPaths': receiptPaths,
+        'currency': currency,
+        'exchangeRateToBase': exchangeRateToBase,
+        'originalAmount': originalAmount,
       };
 }

@@ -716,5 +716,16 @@
   "tripCatTransport": "Transporte",
   "tripCatShopping": "Compras",
   "tripCatEntertainment": "Lazer",
-  "tripCatOther": "Outro"
+  "tripCatOther": "Outro",
+  "remove": "Remove",
+  "tripBaseCurrency": "Trip currency",
+  "tripCurrency": "Paid in",
+  "tripExchangeRate": "Exchange rate",
+  "tripMembersEmpty": "No members yet. Add everyone who shares costs on this trip.",
+  "tripMemberNameHint": "Add a name",
+  "tripMemberDuplicate": "Already on this trip",
+  "tripMemberLabel": "Label",
+  "tripMemberPhone": "Phone",
+  "tripMemberEmail": "Email",
+  "tripMemberRemoveDesc": "Remove this person from the trip? Past expenses that involve them are kept."
 }

@@ -3,15 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../core/const/app_currencies.dart';
 import '../core/const/app_dimensions.dart';
 import '../core/models/trip.dart';
+import '../core/models/trip_member.dart';
 import '../core/utils/blur_utils.dart';
 import '../core/view_models/person_view_model.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'member_avatar.dart';
 
-/// Create or edit a trip: name, destination, date range, and members picked
-/// from the People tab (a trip never invents its own people).
+/// Create or edit a trip: name, destination, date range, the currency the trip
+/// is settled in, and the people sharing it.
+///
+/// Members belong to the trip. People already in the app are offered as a
+/// one-tap shortcut, but nothing here requires them — a trip can add anybody.
 class AddTripDialog extends StatefulWidget {
   const AddTripDialog({super.key, this.existingTrip});
 
@@ -34,7 +39,11 @@ class _AddTripDialogState extends State<AddTripDialog> {
 
   late DateTime _startDate;
   DateTime? _endDate;
-  late Set<String> _selected;
+  late List<TripMember> _members;
+  late String _baseCurrency;
+
+  final TextEditingController _memberController = TextEditingController();
+  String? _duplicateWarning;
 
   bool get _isEditing => widget.existingTrip != null;
 
@@ -47,13 +56,15 @@ class _AddTripDialogState extends State<AddTripDialog> {
         TextEditingController(text: existing?.destination ?? '');
     _startDate = existing?.startDate ?? DateTime.now();
     _endDate = existing?.endDate;
-    _selected = {...?existing?.memberNames};
+    _members = [...?existing?.members];
+    _baseCurrency = existing?.baseCurrency ?? 'INR';
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _destinationController.dispose();
+    _memberController.dispose();
     super.dispose();
   }
 
@@ -61,8 +72,12 @@ class _AddTripDialogState extends State<AddTripDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final people = context.watch<PersonViewModel>().people
+    // Offered as a shortcut only. A trip does not depend on the People tab.
+    final people = [...context.watch<PersonViewModel>().people]
       ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    final unadded = people
+        .where((p) => _members.every((m) => !TripMember.namesMatch(m.name, p.name)))
+        .toList();
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -143,13 +158,57 @@ class _AddTripDialogState extends State<AddTripDialog> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: AppDimensions.spacingStandard),
+                      _fieldLabel(l10n.tripBaseCurrency),
+                      _currencyPicker(context),
                       const SizedBox(height: AppDimensions.spacingLarge),
                       _fieldLabel(l10n.tripMembers),
-                      if (people.isEmpty)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _memberController,
+                              textCapitalization: TextCapitalization.words,
+                              onChanged: (_) => _checkDuplicate(),
+                              onSubmitted: (_) => _addMember(),
+                              style: GoogleFonts.dmSans(
+                                fontSize: 15,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                              decoration: _inputDecoration(
+                                l10n.tripMemberNameHint,
+                              ).copyWith(
+                                errorText: _duplicateWarning == null
+                                    ? null
+                                    : l10n.tripMemberDuplicate,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppDimensions.spacingSmall),
+                          IconButton.filledTonal(
+                            onPressed: _addMember,
+                            icon: const Icon(Icons.person_add_alt_1_rounded),
+                            tooltip: l10n.add,
+                          ),
+                        ],
+                      ),
+                      if (unadded.isNotEmpty) ...[
+                        const SizedBox(height: AppDimensions.spacingSmall),
+                        Wrap(
+                          spacing: AppDimensions.spacingSmall,
+                          runSpacing: AppDimensions.spacingSmall,
+                          children: [
+                            for (final person in unadded)
+                              _suggestionChip(context, person.name),
+                          ],
+                        ),
+                      ],
+                      const SizedBox(height: AppDimensions.spacingSmall),
+                      if (_members.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Text(
-                            l10n.addPeopleEmptyDesc,
+                            l10n.tripMembersEmpty,
                             style: GoogleFonts.dmSans(
                               fontSize: 13,
                               color: theme.colorScheme.onSurface
@@ -162,9 +221,8 @@ class _AddTripDialogState extends State<AddTripDialog> {
                           spacing: AppDimensions.spacingSmall,
                           runSpacing: AppDimensions.spacingSmall,
                           children: [
-                            for (final person in people)
-                              _memberChip(context, person.name,
-                                  person.photoPath),
+                            for (final member in _members)
+                              _memberChip(context, member),
                           ],
                         ),
                     ],
@@ -175,7 +233,8 @@ class _AddTripDialogState extends State<AddTripDialog> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: _selected.length < 2 || _nameController.text.trim().isEmpty
+                  onPressed:
+                      _members.length < 2 || _nameController.text.trim().isEmpty
                       ? null
                       : _submit,
                   style: FilledButton.styleFrom(
@@ -305,48 +364,213 @@ class _AddTripDialogState extends State<AddTripDialog> {
     );
   }
 
-  Widget _memberChip(BuildContext context, String name, String? photoPath) {
+  /// Warns when the typed name is already on the trip, so somebody cannot
+  /// quietly add a second "Rahul" by adding a little whitespace or a capital.
+  void _checkDuplicate() {
+    final typed = _memberController.text.trim();
+    final duplicate =
+        typed.isNotEmpty && _members.any((m) => TripMember.namesMatch(m.name, typed));
+    final warning = duplicate ? typed : null;
+    if (warning != _duplicateWarning) {
+      setState(() => _duplicateWarning = warning);
+    }
+  }
+
+  void _addMember([String? name]) {
+    final candidate = (name ?? _memberController.text).trim();
+    if (candidate.isEmpty) return;
+    final existing = _members.where((m) => TripMember.namesMatch(m.name, candidate));
+    if (existing.isNotEmpty) {
+      // Already here. Select it rather than adding a near-duplicate.
+      setState(() {
+        _duplicateWarning = null;
+        _memberController.clear();
+      });
+      return;
+    }
+    setState(() {
+      _members = [..._members, TripMember(id: Trip.memberIdFor(candidate), name: candidate)];
+      _memberController.clear();
+      _duplicateWarning = null;
+    });
+  }
+
+  Widget _suggestionChip(BuildContext context, String name) {
     final theme = Theme.of(context);
-    final selected = _selected.contains(name);
+    return ActionChip(
+      onPressed: () => _addMember(name),
+      avatar: MemberAvatar(name: name, size: 22),
+      label: Text(
+        name,
+        style: GoogleFonts.dmSans(
+          fontSize: 12,
+          color: theme.colorScheme.onSurface,
+        ),
+      ),
+      backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+      side: BorderSide.none,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusFull),
+      ),
+    );
+  }
+
+  Widget _memberChip(BuildContext context, TripMember member) {
+    final theme = Theme.of(context);
     return GestureDetector(
-      onTap: () => setState(() {
-        if (selected) {
-          _selected.remove(name);
-        } else {
-          _selected.add(name);
-        }
-      }),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 160),
-        padding: const EdgeInsets.fromLTRB(4, 4, 12, 4),
+      onTap: () => _editMemberDetails(context, member),
+      onLongPress: () => _confirmRemoveMember(context, member),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(4, 4, 10, 4),
         decoration: BoxDecoration(
-          color: selected
-              ? theme.colorScheme.primary.withValues(alpha: 0.12)
-              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+          color: theme.colorScheme.primary.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(AppDimensions.borderRadiusFull),
           border: Border.all(
-            color: selected
-                ? theme.colorScheme.primary.withValues(alpha: 0.35)
-                : Colors.transparent,
+            color: theme.colorScheme.primary.withValues(alpha: 0.35),
             width: 1.2,
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            MemberAvatar(name: name, photoPath: photoPath, size: 26),
+            MemberAvatar(name: member.displayName, size: 26),
             const SizedBox(width: AppDimensions.spacingSmall),
             Text(
-              name,
+              member.displayName,
               style: GoogleFonts.dmSans(
                 fontSize: 13,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                color: selected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 4),
+            GestureDetector(
+              onTap: () => _confirmRemoveMember(context, member),
+              child: Icon(
+                Icons.close_rounded,
+                size: AppDimensions.iconSizeSmall,
+                color: theme.colorScheme.primary.withValues(alpha: 0.7),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// Optional contact details, and a label for two members who share a name.
+  Future<void> _editMemberDetails(BuildContext context, TripMember member) async {
+    final l10n = AppLocalizations.of(context)!;
+    final labelController = TextEditingController(text: member.label);
+    final phoneController = TextEditingController(text: member.phone);
+    final emailController = TextEditingController(text: member.email);
+
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(member.name),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: labelController,
+                decoration: InputDecoration(labelText: l10n.tripMemberLabel),
+              ),
+              TextField(
+                controller: phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(labelText: l10n.tripMemberPhone),
+              ),
+              TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(labelText: l10n.tripMemberEmail),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.save),
+          ),
+        ],
+      ),
+    );
+
+    if (saved == true) {
+      setState(() {
+        member.label = _blankToNull(labelController.text);
+        member.phone = _blankToNull(phoneController.text);
+        member.email = _blankToNull(emailController.text);
+      });
+    }
+    labelController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+  }
+
+  Future<void> _confirmRemoveMember(BuildContext context, TripMember member) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(member.name),
+        content: Text(l10n.tripMemberRemoveDesc),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.remove),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      setState(() => _members = _members.where((m) => m.id != member.id).toList());
+    }
+  }
+
+  static String? _blankToNull(String value) =>
+      value.trim().isEmpty ? null : value.trim();
+
+  Widget _currencyPicker(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingStandard,
+        vertical: 4,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusSmall),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _baseCurrency,
+          isExpanded: true,
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusRegular),
+          items: [
+            for (final currency in AppCurrencies.all)
+              DropdownMenuItem<String>(
+                value: currency.code,
+                child: Text(
+                  '${currency.flag}  ${currency.code} — ${currency.name}',
+                  style: GoogleFonts.dmSans(fontSize: 14),
+                ),
+              ),
+          ],
+          onChanged: (value) {
+            if (value != null) setState(() => _baseCurrency = value);
+          },
         ),
       ),
     );
@@ -381,7 +605,9 @@ class _AddTripDialogState extends State<AddTripDialog> {
           : _destinationController.text.trim(),
       startDate: _startDate,
       endDate: _endDate,
-      memberNames: _selected.toList(),
+      memberNames: _members.map((m) => m.name).toList(),
+      members: _members,
+      baseCurrency: _baseCurrency,
       notes: existing?.notes,
       coverPhotoPath: existing?.coverPhotoPath,
       isArchived: existing?.isArchived ?? false,

@@ -16,6 +16,7 @@ import 'core/models/transaction.dart';
 import 'core/models/detection_history.dart';
 import 'core/models/trip.dart';
 import 'core/models/trip_expense.dart';
+import 'core/models/trip_member.dart';
 import 'core/models/trip_settlement.dart';
 import 'core/repositories/transaction_repository.dart';
 import 'core/repositories/person_repository.dart';
@@ -48,6 +49,9 @@ void main() async {
   Hive.registerAdapter(TripAdapter());
   Hive.registerAdapter(TripExpenseAdapter());
   Hive.registerAdapter(TripSettlementAdapter());
+  // Members are read inside Trip, so typeId 9 has to be known before any trip
+  // box is opened or reading one throws on the unknown type.
+  Hive.registerAdapter(TripMemberAdapter());
 
   try {
     await Future.wait([

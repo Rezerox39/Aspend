@@ -26,13 +26,15 @@ class TripAdapter extends TypeAdapter<Trip> {
       notes: fields[7] as String?,
       isArchived: fields[8] as bool? ?? false,
       createdAt: fields[9] as DateTime? ?? DateTime.now(),
+      baseCurrency: fields[10] as String? ?? 'INR',
+      members: (fields[11] as List?)?.cast<TripMember>() ?? const <TripMember>[],
     );
   }
 
   @override
   void write(BinaryWriter writer, Trip obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -50,7 +52,11 @@ class TripAdapter extends TypeAdapter<Trip> {
       ..writeByte(8)
       ..write(obj.isArchived)
       ..writeByte(9)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(10)
+      ..write(obj.baseCurrency)
+      ..writeByte(11)
+      ..write(obj.members);
   }
 
   @override

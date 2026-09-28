@@ -10,6 +10,7 @@ import '../core/services/native_bridge.dart';
 import 'dart:async';
 import 'home_page.dart';
 import 'people_page.dart';
+import 'trips_page.dart';
 import 'chart_page.dart';
 import 'settings_page.dart';
 import '../core/utils/responsive_utils.dart';
@@ -41,6 +42,7 @@ class _RootNavigationState extends State<RootNavigation>
   // Cache screens to avoid rebuilds and glitching
   final List<Widget> _screens = [
     const HomePage(),
+    const TripsPage(isTab: true),
     const PeopleTab(),
     const ChartPage(),
     const SettingsPage(),
@@ -218,6 +220,11 @@ class _RootNavigationState extends State<RootNavigation>
                       label: Text(l10n.appName),
                     ),
                     NavigationRailDestination(
+                      icon: const Icon(Icons.luggage_outlined),
+                      selectedIcon: const Icon(Icons.luggage_rounded),
+                      label: Text(l10n.trips),
+                    ),
+                    NavigationRailDestination(
                       icon: const Icon(Icons.group_outlined),
                       selectedIcon: const Icon(Icons.group_rounded),
                       label: Text(l10n.people),
@@ -278,6 +285,10 @@ class _RootNavigationState extends State<RootNavigation>
                               NativeGlassNavBarItem(
                                 label: l10n.appName,
                                 symbol: 'house',
+                              ),
+                              NativeGlassNavBarItem(
+                                label: l10n.trips,
+                                symbol: 'suitcase',
                               ),
                               NativeGlassNavBarItem(
                                 label: l10n.people,

@@ -73,6 +73,9 @@ class TripRepository {
   Future<void> addSettlement(TripSettlement settlement) =>
       _settlementsBox.add(settlement);
 
+  Future<void> updateSettlement(dynamic key, TripSettlement settlement) =>
+      _settlementsBox.put(key, settlement);
+
   Future<void> deleteSettlement(dynamic key) => _settlementsBox.delete(key);
 
   Stream<BoxEvent> watchSettlements() => _settlementsBox.watch();

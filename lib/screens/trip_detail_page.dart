@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../core/const/app_currencies.dart';
 import '../core/const/app_colors.dart';
 import '../core/const/app_dimensions.dart';
 import '../core/const/app_typography.dart';
@@ -10,7 +11,6 @@ import '../core/models/trip.dart';
 import '../core/models/trip_expense.dart';
 import '../core/models/trip_settlement.dart';
 import '../core/view_models/person_view_model.dart';
-import '../core/view_models/theme_view_model.dart';
 import '../core/view_models/trip_view_model.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../widgets/add_trip_dialog.dart';
@@ -29,8 +29,6 @@ class TripDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final currencySymbol =
-        context.select<ThemeViewModel, String>((vm) => vm.currencySymbol);
 
     final viewModel = context.watch<TripViewModel>();
     final trip = viewModel.tripByKey(tripId);
@@ -44,10 +42,18 @@ class TripDetailPage extends StatelessWidget {
       );
     }
 
+    // A trip owns its members now, so photos are an optional extra borrowed
+    // from the People tab by name — keyed by member id like everything else.
     final people = context.watch<PersonViewModel>().people;
-    final photoPaths = <String, String?>{
+    final photosByName = <String, String?>{
       for (final person in people) person.name: person.photoPath,
     };
+    final photoPaths = <String, String?>{
+      for (final member in trip.effectiveMembers)
+        member.id: photosByName[member.name],
+    };
+    // Balances are held in the trip's own base currency.
+    final currencySymbol = AppCurrencies.byCode(trip.baseCurrency).symbol;
 
     final expenses = viewModel.expensesFor(tripId);
     final balances = viewModel.balancesFor(tripId);
@@ -144,6 +150,7 @@ class TripDetailPage extends StatelessWidget {
                     balances: balances,
                     plan: plan,
                     photoPaths: photoPaths,
+                    nameFor: trip.nameOf,
                     currencySymbol: currencySymbol,
                     outstanding: viewModel.outstandingFor(tripId),
                     isSettled: viewModel.isFullySettled(tripId),

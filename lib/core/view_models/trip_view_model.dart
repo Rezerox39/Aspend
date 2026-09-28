@@ -5,6 +5,7 @@ import 'package:aspends_tracker/core/models/trip_expense.dart';
 import 'package:aspends_tracker/core/models/trip_settlement.dart';
 import 'package:aspends_tracker/core/repositories/trip_repository.dart';
 import 'package:aspends_tracker/core/services/settlement_calculator.dart';
+import 'package:aspends_tracker/core/services/trip_migration.dart';
 import 'package:flutter/foundation.dart';
 
 /// Owns all group-trip state: the trips themselves, their shared expenses, and
@@ -41,6 +42,7 @@ class TripViewModel extends ChangeNotifier {
 
   TripViewModel(this._repository) {
     _loadData();
+    _ensureMigrated();
     _subscribeToChanges();
   }
 
@@ -175,6 +177,22 @@ class TripViewModel extends ChangeNotifier {
 
   // ------------------------------------------------------------- internals
 
+  /// Whether the name-keyed upgrade still has to run.
+  bool _migrationChecked = false;
+
+  Future<void> _ensureMigrated() async {
+    if (_migrationChecked) return;
+    _migrationChecked = true;
+    try {
+      final migrated = await TripMigration(_repository).run();
+      if (migrated > 0) _loadData();
+    } catch (_) {
+      // A failed upgrade must never stop the app opening. The trips stay
+      // readable exactly as they were, keyed by name.
+      _migrationChecked = false;
+    }
+  }
+
   void _loadData() {
     _trips = _repository.getAllTrips();
     _expenses = _repository.getAllExpenses();
@@ -193,7 +211,7 @@ class TripViewModel extends ChangeNotifier {
     _memberCountByTrip.clear();
 
     for (final trip in _trips) {
-      _memberCountByTrip[trip.key.toString()] = trip.memberNames.length;
+      _memberCountByTrip[trip.key.toString()] = trip.effectiveMembers.length;
     }
 
     for (final expense in _expenses) {
@@ -222,7 +240,7 @@ class TripViewModel extends ChangeNotifier {
         _settlementsByTrip[tripId] ?? const <TripSettlement>[];
 
     final balances = SettlementCalculator.computeBalances(
-      members: trip.memberNames,
+      members: trip.effectiveMembers.map((m) => m.id).toList(),
       expenses: tripExpenses,
       settlements: [
         for (final settlement in tripSettlements)
