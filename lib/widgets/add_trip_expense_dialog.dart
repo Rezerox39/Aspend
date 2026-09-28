@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 import '../core/const/app_assets.dart';
 import '../core/const/app_currencies.dart';
@@ -11,7 +10,6 @@ import '../core/models/trip.dart';
 import '../core/models/trip_expense.dart';
 import '../core/services/settlement_calculator.dart';
 import '../core/utils/blur_utils.dart';
-import '../core/view_models/theme_view_model.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'member_avatar.dart';
 
@@ -272,7 +270,7 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
                             color: theme.colorScheme.onSurface,
                           ),
                           decoration: _decoration(
-                              '1 ${AppCurrencies.byCode(widget.trip.baseCurrency).code} = ? ${_currency}'),
+                              '1 ${AppCurrencies.byCode(widget.trip.baseCurrency).code} = ? $_currency'),
                         ),
                         if (_rate > 0)
                           Padding(
@@ -384,6 +382,51 @@ class _AddTripExpenseDialogState extends State<AddTripExpenseDialog> {
           borderSide: BorderSide.none,
         ),
       );
+
+  /// The currency this expense was actually paid in.
+  ///
+  /// Defaults to the trip's own currency, so a single-currency trip never sees
+  /// a control that would do nothing. Choosing anything else reveals the rate
+  /// field, because without it the base amount cannot be worked out.
+  Widget _currencyRow(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.paddingStandard,
+        vertical: 4,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusSmall),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _currency,
+          isExpanded: true,
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusRegular),
+          items: [
+            for (final currency in AppCurrencies.all)
+              DropdownMenuItem<String>(
+                value: currency.code,
+                child: Text(
+                  '${currency.flag}  ${currency.code} — ${currency.name}',
+                  style: GoogleFonts.dmSans(fontSize: 14),
+                ),
+              ),
+          ],
+          onChanged: (value) {
+            if (value == null) return;
+            setState(() {
+              _currency = value;
+              // A rate from the previous currency would silently convert the
+              // new one, so it goes when the currency changes.
+              _rateController.clear();
+            });
+          },
+        ),
+      ),
+    );
+  }
 
   Widget _categoryRow(BuildContext context) {
     final theme = Theme.of(context);

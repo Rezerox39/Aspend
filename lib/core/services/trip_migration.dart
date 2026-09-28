@@ -1,7 +1,5 @@
 import 'package:aspends_tracker/core/models/trip.dart';
-import 'package:aspends_tracker/core/models/trip_expense.dart';
 import 'package:aspends_tracker/core/models/trip_member.dart';
-import 'package:aspends_tracker/core/models/trip_settlement.dart';
 import 'package:aspends_tracker/core/repositories/trip_repository.dart';
 
 /// One-time upgrade of trips created before members were first-class.

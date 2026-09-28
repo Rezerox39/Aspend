@@ -205,14 +205,17 @@ class Trip extends HiveObject {
         isArchived: json['isArchived'] as bool? ?? false,
         baseCurrency: (json['baseCurrency'] as String?) ?? 'INR',
         members: [
+          // Promoted once instead of cast five times per member. A malformed
+          // entry is skipped rather than throwing on the whole trip.
           for (final raw in (json['members'] as List? ?? const []))
-            TripMember(
-              id: (raw as Map)['id'] as String,
-              name: (raw as Map)['name'] as String,
-              phone: (raw as Map)['phone'] as String?,
-              email: (raw as Map)['email'] as String?,
-              label: (raw as Map)['label'] as String?,
-            ),
+            if (raw is Map)
+              TripMember(
+                id: raw['id'] as String,
+                name: raw['name'] as String,
+                phone: raw['phone'] as String?,
+                email: raw['email'] as String?,
+                label: raw['label'] as String?,
+              ),
         ],
         createdAt: json['createdAt'] == null
             ? DateTime.now()
